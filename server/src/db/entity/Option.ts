@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import OptionList from "./OptionList";
+import TodayOption from "./TodayOption";
 
 @Entity()
 class Option {
@@ -11,6 +18,9 @@ class Option {
 
   @ManyToMany(() => OptionList, (optionList) => optionList.options)
   optionLists: OptionList[];
+
+  @OneToMany(() => TodayOption, (todayOption) => todayOption.option)
+  todayOptions: TodayOption[];
 }
 
 export default Option;

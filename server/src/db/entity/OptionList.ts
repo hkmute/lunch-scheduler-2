@@ -4,8 +4,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import Code from "./Code";
 import Option from "./Option";
 import User from "./User";
 
@@ -19,6 +21,9 @@ class OptionList {
 
   @ManyToOne(() => User, (user) => user.optionLists)
   owner: User;
+
+  @OneToMany(() => Code, (code) => code.optionList)
+  code: Code[];
 
   @ManyToMany(() => Option, (option) => option.optionLists)
   @JoinTable({

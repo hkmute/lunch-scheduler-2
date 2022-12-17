@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import History from "./History";
+import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
 import User from "./User";
 
@@ -19,6 +20,9 @@ class Code {
 
   @ManyToOne(() => User, (user) => user.codes)
   owner: User;
+
+  @ManyToOne(() => OptionList, (optionList) => optionList.code)
+  optionList: OptionList;
 
   @OneToMany(() => TodayOption, (option) => option.code)
   todayOptions: TodayOption[];
