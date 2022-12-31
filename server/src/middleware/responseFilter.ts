@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-const ResponseFilter: RequestHandler = (req, res, next) => {
+const responseFilter: RequestHandler = (req, res, next) => {
   try {
     const oldJSON = res.json;
     res.json = (data) => {
@@ -16,4 +16,4 @@ const ResponseFilter: RequestHandler = (req, res, next) => {
   }
 };
 
-export default ResponseFilter;
+export default responseFilter;

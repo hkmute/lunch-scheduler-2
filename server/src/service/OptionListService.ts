@@ -1,7 +1,7 @@
 import { DataSource, Repository } from "typeorm";
 import OptionList from "../db/entity/OptionList";
 import Option from "../db/entity/Option";
-import User from "../db/entity/AppUser";
+import AppUser from "../db/entity/AppUser";
 import { newEntity } from "../util/helpers";
 
 type CreateOptionListData = {
@@ -51,7 +51,7 @@ class OptionListService {
     ownerId,
     options,
   }: CreateOptionListData) => {
-    const owner = newEntity(User, { id: ownerId });
+    const owner = newEntity(AppUser, { id: ownerId });
     const relatedOptions = options
       .filter((option) => option.id)
       .map((option) => newEntity(Option, option));
