@@ -12,6 +12,9 @@ class AppUser extends DefaultColumns {
   username: string;
 
   @Column()
+  email: string;
+
+  @Column()
   displayName: string;
 
   @OneToMany(() => Code, (code) => code.owner)

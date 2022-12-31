@@ -8,11 +8,20 @@ class AuthController {
 
   login: RequestHandler = async (req, res, next) => {
     try {
-      const { type, id_token } = req.body;
+      const { type, id_token, displayName } = req.body;
       if (type === "google") {
         validateReq("token", id_token, "string", (data) => !!data);
         const googleUser = await this.authService.googleLogin(id_token);
         const token = await this.authService.appLogin(googleUser);
+        return res.json(token);
+      }
+      if (type === "apple") {
+        validateReq("token", id_token, "string", (data) => !!data);
+        const appleUser = await this.authService.appleLogin(
+          id_token,
+          displayName
+        );
+        const token = await this.authService.appLogin(appleUser);
         return res.json(token);
       }
       throw new AppError("Invalid login type", 400);
