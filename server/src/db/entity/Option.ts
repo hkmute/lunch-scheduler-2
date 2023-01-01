@@ -4,11 +4,13 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
 import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
 
 @Entity()
+@Unique(["name"])
 class Option {
   @PrimaryGeneratedColumn()
   id: number;

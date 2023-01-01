@@ -8,18 +8,19 @@ import {
 import History from "./History";
 import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
-import User from "./User";
+import AppUser from "./AppUser";
+import { DefaultColumns } from "./DefaultColumns";
 
 @Entity()
-class Code {
+class Code extends DefaultColumns {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   code: string;
 
-  @ManyToOne(() => User, (user) => user.codes)
-  owner: User;
+  @ManyToOne(() => AppUser, (user) => user.codes)
+  owner: AppUser;
 
   @ManyToOne(() => OptionList, (optionList) => optionList.code)
   optionList: OptionList;

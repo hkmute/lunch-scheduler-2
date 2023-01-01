@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Code from "./Code";
+import { DefaultColumns } from "./DefaultColumns";
 import OptionList from "./OptionList";
 
 @Entity()
-class User {
+class AppUser extends DefaultColumns {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,13 +12,16 @@ class User {
   username: string;
 
   @Column()
+  email: string;
+
+  @Column()
   displayName: string;
 
   @OneToMany(() => Code, (code) => code.owner)
   codes: Code[];
-  
+
   @OneToMany(() => OptionList, (optionList) => optionList.owner)
   optionLists: OptionList[];
 }
 
-export default User;
+export default AppUser;

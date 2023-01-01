@@ -3,18 +3,21 @@ import { DataSource } from "typeorm";
 import CONFIG, { isProduction } from "../config";
 import { SnakeNamingStrategy } from "./namingStrategy";
 
-export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: CONFIG.DB_HOST,
-  port: CONFIG.DB_PORT,
-  username: CONFIG.DB_USER,
-  password: CONFIG.DB_PASSWORD,
-  database: CONFIG.DB_NAME,
-  // dropSchema: !isProduction,
-  synchronize: !isProduction,
-  logging: isProduction ? ["error", "warn"] : true,
-  entities: [path.join(__dirname, "entity/*")],
-  subscribers: [],
-  migrations: [],
-  namingStrategy: new SnakeNamingStrategy(),
-});
+const initAppDataSource = (config: typeof CONFIG) =>
+  new DataSource({
+    type: "postgres",
+    host: config.DB_HOST,
+    port: config.DB_PORT,
+    username: config.DB_USER,
+    password: config.DB_PASSWORD,
+    database: config.DB_NAME,
+    // dropSchema: !isProduction,
+    synchronize: !isProduction,
+    logging: isProduction ? ["error", "warn"] : true,
+    entities: [path.join(__dirname, "entity/*")],
+    subscribers: [],
+    migrations: [],
+    namingStrategy: new SnakeNamingStrategy(),
+  });
+
+export const AppDataSource = initAppDataSource(CONFIG);

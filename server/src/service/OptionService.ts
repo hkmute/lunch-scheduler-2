@@ -28,6 +28,22 @@ class OptionService {
     });
     return options;
   };
+
+  createOptions = async (options: { name: string }[]) => {
+    if (!options.length) {
+      return [];
+    }
+    await this.optionRepo
+      .createQueryBuilder()
+      .insert()
+      .values(options)
+      .orIgnore()
+      .execute();
+    const optionsList = await this.optionRepo.findBy(
+      options.map(({ name }) => ({ name }))
+    );
+    return optionsList;
+  };
 }
 
 export default OptionService;

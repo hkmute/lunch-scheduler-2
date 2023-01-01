@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import Code from "./Code";
+import { DefaultColumns } from "./DefaultColumns";
 import Option from "./Option";
 
 @Entity()
