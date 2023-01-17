@@ -7,6 +7,7 @@ import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
 export type RootStackParamList = {
   Home: HomeScreenParamList;
+  CreateRoom: CreateRoomScreenParamList;
   Room: NavigatorScreenParams<RoomTabParamList>;
 };
 
@@ -14,6 +15,7 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 
 export type HomeScreenParamList = undefined;
+export type CreateRoomScreenParamList = undefined;
 
 export type RoomTabParamList = {
   Today: TodayScreenParamList;
@@ -27,7 +29,7 @@ export type RoomTabScreenProps<T extends keyof RoomTabParamList> =
     NativeStackScreenProps<RootStackParamList>
   >;
 
-export type TodayScreenParamList = undefined;
+export type TodayScreenParamList = { code: string };
 export type HistoryScreenParamList = undefined;
 export type SettingsScreenParamList = undefined;
 

@@ -1,16 +1,35 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { ThemeProvider } from "@rneui/themed";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import queryClient from "./api/queryClient";
+import { UserContextProvider } from "./context/UserContext";
+import { ErrorContextProvider } from "./context/ErrorContext";
 import RootStackNavigator from "./navigation";
+import theme from "./styles/theme";
+import ErrorModal from "./components/viewComponents/ErrorModal";
+import NavContainer from "./navigation/NavContainer";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <RootStackNavigator />
-      </NavigationContainer>
-    </View>
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <View style={styles.container}>
+          <QueryClientProvider client={queryClient}>
+            <ErrorContextProvider>
+              <UserContextProvider>
+                <NavContainer>
+                  <StatusBar style="light" />
+                  <ErrorModal />
+                  <RootStackNavigator />
+                </NavContainer>
+              </UserContextProvider>
+            </ErrorContextProvider>
+          </QueryClientProvider>
+        </View>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }
 
