@@ -31,3 +31,19 @@ export const validateReq = (
   }
   return true;
 };
+
+type Option = { id?: number; name: string };
+export const preprocessOptions = (options: Option[]) => {
+  const optionsWithId: Option[] = [];
+  const optionsToInsert: Option[] = [];
+  if (!options) {
+    return { optionsWithId, optionsToInsert };
+  }
+  options.forEach((option) => {
+    if (option.id) {
+      return optionsWithId.push(option);
+    }
+    return optionsToInsert.push(option);
+  });
+  return { optionsWithId, optionsToInsert };
+};

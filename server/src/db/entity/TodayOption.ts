@@ -1,12 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import Code from "./Code";
+import { DefaultColumns } from "./DefaultColumns";
 import Option from "./Option";
 
 @Entity()
-class TodayOption {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+class TodayOption extends DefaultColumns {
   @Column()
   date: Date;
 

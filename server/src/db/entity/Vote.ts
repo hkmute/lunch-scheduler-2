@@ -1,11 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
+import { DefaultColumns } from "./DefaultColumns";
 import Option from "./Option";
 
 @Entity()
-class Vote {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+class Vote extends DefaultColumns {
   @Column()
   date: Date;
 

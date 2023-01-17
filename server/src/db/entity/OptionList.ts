@@ -5,7 +5,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from "typeorm";
 import Code from "./Code";
 import Option from "./Option";
@@ -14,9 +13,6 @@ import { DefaultColumns } from "./DefaultColumns";
 
 @Entity()
 class OptionList extends DefaultColumns {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column()
   name: string;
 

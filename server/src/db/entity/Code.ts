@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, Unique } from "typeorm";
 import History from "./History";
 import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
@@ -12,10 +6,8 @@ import AppUser from "./AppUser";
 import { DefaultColumns } from "./DefaultColumns";
 
 @Entity()
+@Unique(["code"])
 class Code extends DefaultColumns {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column()
   code: string;
 
