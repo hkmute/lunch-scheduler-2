@@ -5,11 +5,12 @@ const retrieveUserId: RequestHandler = (req, res, next) => {
   if (req.headers.authorization) {
     try {
       const userId = AuthService.verifyUserToken(
-        req.headers.authorization.replace("Bearer ", "")
+        req.headers.authorization.split("Bearer ")[1]
       );
+      console.log(req.headers.authorization.split("Bearer ")[1], userId);
       req.user = userId;
     } catch (err) {
-      console.log(
+      console.error(
         `Unable to retrieve user id from token. Reason: ${err.message}`
       );
     }

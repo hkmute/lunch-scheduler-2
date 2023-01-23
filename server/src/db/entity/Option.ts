@@ -1,20 +1,11 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  Unique,
-} from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, Unique } from "typeorm";
+import { DefaultColumns } from "./DefaultColumns";
 import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
 
 @Entity()
 @Unique(["name"])
-class Option {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+class Option extends DefaultColumns {
   @Column()
   name: string;
 

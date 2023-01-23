@@ -51,6 +51,13 @@ class AuthService {
     }
   };
 
+  static signUserToken = (userId: number) => {
+    const token = jwt.sign({ id: userId }, CONFIG.USER_SECRET, {
+      expiresIn: "7d",
+    });
+    return token;
+  };
+
   googleLogin = async (id_token: string) => {
     try {
       const verifyOptions: VerifyOptions = {
@@ -133,7 +140,7 @@ class AuthService {
     if (!appUser) {
       return this.register(user);
     }
-    const token = this.signUserToken(appUser.id);
+    const token = AuthService.signUserToken(appUser.id);
     return {
       id: appUser.id,
       displayName: appUser.displayName,
@@ -147,19 +154,12 @@ class AuthService {
       displayName: user.displayName || user.username,
     });
     const result = await this.appUserRepo.save(newAppUser);
-    const token = this.signUserToken(result.id);
+    const token = AuthService.signUserToken(result.id);
     return {
       id: result.id,
       displayName: result.displayName,
       token,
     };
-  };
-
-  private signUserToken = (userId: number) => {
-    const token = jwt.sign({ id: userId }, CONFIG.USER_SECRET, {
-      expiresIn: "7d",
-    });
-    return token;
   };
 }
 

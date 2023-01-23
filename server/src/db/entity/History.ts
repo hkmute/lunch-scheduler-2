@@ -4,10 +4,7 @@ import { DefaultColumns } from "./DefaultColumns";
 import Option from "./Option";
 
 @Entity()
-class History {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+class History extends DefaultColumns {
   @Column()
   date: Date;
 

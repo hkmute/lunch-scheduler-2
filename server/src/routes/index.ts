@@ -3,19 +3,38 @@ import {
   authController,
   mainController,
   optionListController,
+  codeController,
 } from "../controller";
+import guard from "../middleware/guard";
+import errorCatcher from "../util/error/errorCatcher";
 
 const router = express.Router();
 
-router.post("/login", authController.login);
+router.get("/me", guard, errorCatcher(mainController.getMe));
+router.post("/login", errorCatcher(authController.login));
 
-router.get("/options", mainController.getOptions);
+router.post("/code", errorCatcher(codeController.createCode));
+router.get("/code/:code/exist", errorCatcher(codeController.checkCodeExist));
 
-router.get("/today/:code", mainController.getToday);
+router.get("/options", errorCatcher(mainController.getOptions));
 
-router.get("/option-list", optionListController.getAllOptionLists);
-router.post("/option-list", optionListController.createOptionList);
-router.put("/option-list/:id", optionListController.updateOptionList);
-router.delete("/option-list/:id", optionListController.removeOptionList);
+router.get("/today/:code", errorCatcher(mainController.getToday));
+
+router.get(
+  "/option-list",
+  errorCatcher(optionListController.getAllOptionLists)
+);
+router.post(
+  "/option-list",
+  errorCatcher(optionListController.createOptionList)
+);
+router.put(
+  "/option-list/:id",
+  errorCatcher(optionListController.updateOptionList)
+);
+router.delete(
+  "/option-list/:id",
+  errorCatcher(optionListController.removeOptionList)
+);
 
 export default router;
