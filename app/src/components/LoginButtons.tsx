@@ -2,7 +2,7 @@ import AppleAuth from "@/auth/AppleAuth";
 import GoogleAuth from "@/auth/GoogleAuth";
 import { StyleSheet, View } from "react-native";
 
-const LoginButtons = () => {
+const LoginButtons: React.FC = () => {
   return (
     <View style={[styles.container]}>
       <View style={[styles.button]}>
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     alignItems: "center",
-    gap: 10,
   },
   button: {
     marginBottom: 8,

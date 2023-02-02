@@ -47,3 +47,16 @@ export const preprocessOptions = (options: Option[]) => {
   });
   return { optionsWithId, optionsToInsert };
 };
+
+export const getPaginationParams = (query: Record<string, any>) => {
+  const limit = parseInt(query.limit ?? 0);
+  const offset = parseInt(query.offset ?? 0);
+  validateReq("limit", limit, "number");
+  validateReq("offset", offset, "number");
+  return { limit, offset };
+};
+
+export const sanitizeOwner = (data: Record<string, any>, userId: number) => {
+  const { owner, ...rest } = data;
+  return { ...rest, isOwner: owner?.id === userId };
+};

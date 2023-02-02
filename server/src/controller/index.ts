@@ -5,6 +5,8 @@ import {
   authService,
   userService,
   codeService,
+  todayOptionService,
+  voteService,
 } from "../service";
 import AuthController from "./AuthController";
 import CodeController from "./CodeController";
@@ -15,7 +17,9 @@ export const authController = new AuthController(authService);
 export const mainController = new MainController(
   userService,
   optionService,
-  historyService
+  todayOptionService,
+  historyService,
+  voteService
 );
 export const optionListController = new OptionListController(
   optionService,

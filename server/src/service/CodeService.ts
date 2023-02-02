@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, FindManyOptions, Repository } from "typeorm";
 import Code from "../db/entity/Code";
 import { newEntity } from "../util/helpers";
 
@@ -13,6 +13,42 @@ class CodeService {
       code,
     }));
     return isExist;
+  };
+
+  getCode = async (code: string) => {
+    const codeInfo = await this.codeRepo.findOneBy({ code });
+    return codeInfo;
+  };
+
+  getCodeDetails = async (code: string) => {
+    const codeDetails = await this.codeRepo.findOne({
+      where: {
+        code,
+      },
+      relations: {
+        owner: true,
+        optionList: {
+          options: true,
+        },
+      },
+    });
+    return codeDetails;
+  };
+
+  getAllCode = async (options?: FindManyOptions<Code>) => {
+    const allCode = await this.codeRepo.find(options);
+    return allCode;
+  };
+
+  getAllCodeDetails = async () => {
+    const allCodeDetails = await this.codeRepo.find({
+      relations: {
+        optionList: {
+          options: true,
+        },
+      },
+    });
+    return allCodeDetails;
   };
 
   createCode = async (

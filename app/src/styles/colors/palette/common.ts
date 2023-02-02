@@ -1,5 +1,7 @@
+import grey from "./grey";
+
 const common = {
-  black: "#000",
+  black: grey[900],
   white: "#fff",
 } as const;
 

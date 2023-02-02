@@ -1,10 +1,6 @@
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import {
-  Pressable,
-  Image,
-  StyleSheet,
-} from "react-native";
+import { Pressable, Image, StyleSheet } from "react-native";
 import {
   ANDROID_GOOGLE_GUID,
   EXPO_GOOGLE_GUID,
@@ -15,13 +11,13 @@ import { ResponseType } from "expo-auth-session";
 import googleLightIconNormal from "@/assets/icons/btn_google_signin_light_normal_web.png";
 import googleLightIconPressed from "@/assets/icons/btn_google_signin_light_pressed_web.png";
 import useLogin from "@/api/auth/useLogin";
-import { useContext, useEffect } from "react";
-import { UserContext } from "@/context/UserContext";
+import { useEffect } from "react";
+import { useUserContext } from "@/context";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const GoogleAuth: React.FC = () => {
-  const { updateUser } = useContext(UserContext);
+  const { updateUser } = useUserContext();
   const login = useLogin(updateUser);
 
   const [request, response, promptAsync] = Google.useAuthRequest({

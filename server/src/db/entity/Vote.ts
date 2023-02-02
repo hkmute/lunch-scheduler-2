@@ -1,17 +1,22 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, Unique } from "typeorm";
+import Code from "./Code";
 import { DefaultColumns } from "./DefaultColumns";
-import Option from "./Option";
+import TodayOption from "./TodayOption";
 
 @Entity()
+@Unique("day_vote", ["date", "voter", "code"])
 class Vote extends DefaultColumns {
   @Column()
   date: Date;
 
   @Column()
-  user: string;
+  voter: string;
 
-  @ManyToOne(() => Option)
-  option: Option;
+  @ManyToOne(() => Code, (code) => code.votes)
+  code: Code;
+
+  @ManyToOne(() => TodayOption, (option) => option.votes)
+  todayOption: TodayOption;
 }
 
 export default Vote;

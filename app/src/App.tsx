@@ -1,33 +1,38 @@
 import { ThemeProvider } from "@rneui/themed";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import queryClient from "./api/queryClient";
 import { UserContextProvider } from "./context/UserContext";
 import { ErrorContextProvider } from "./context/ErrorContext";
 import RootStackNavigator from "./navigation";
 import theme from "./styles/theme";
 import ErrorModal from "./components/viewComponents/ErrorModal";
 import NavContainer from "./navigation/NavContainer";
+import { CodeContextProvider } from "./context/CodeContext";
+import QueryClientProvider from "./api/QueryClientProvider";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
-        <View style={styles.container}>
-          <QueryClientProvider client={queryClient}>
+        <RootSiblingParent>
+          <View style={styles.container}>
             <ErrorContextProvider>
-              <UserContextProvider>
-                <NavContainer>
-                  <StatusBar style="light" />
-                  <ErrorModal />
-                  <RootStackNavigator />
-                </NavContainer>
-              </UserContextProvider>
+              <QueryClientProvider>
+                <UserContextProvider>
+                  <CodeContextProvider>
+                    <NavContainer>
+                      <StatusBar style="light" />
+                      <ErrorModal />
+                      <RootStackNavigator />
+                    </NavContainer>
+                  </CodeContextProvider>
+                </UserContextProvider>
+              </QueryClientProvider>
             </ErrorContextProvider>
-          </QueryClientProvider>
-        </View>
+          </View>
+        </RootSiblingParent>
       </SafeAreaProvider>
     </ThemeProvider>
   );

@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import Code from "./Code";
 import { DefaultColumns } from "./DefaultColumns";
 import Option from "./Option";
+import Vote from "./Vote";
 
 @Entity()
 class TodayOption extends DefaultColumns {
@@ -13,6 +14,9 @@ class TodayOption extends DefaultColumns {
 
   @ManyToOne(() => Option)
   option: Option;
+
+  @OneToMany(() => Vote, (vote) => vote.todayOption)
+  votes: Vote[];
 }
 
 export default TodayOption;

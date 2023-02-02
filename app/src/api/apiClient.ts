@@ -26,7 +26,7 @@ apiClient.interceptors.response.use(
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     console.log("response interceptor", response.config.url, response.data);
-    return response.data;
+    return response.data.data;
   },
   function (error: AxiosError) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -35,10 +35,6 @@ apiClient.interceptors.response.use(
       "response interceptor",
       JSON.stringify(error.response?.data, null, 2)
     );
-    const errorDetails = error.toJSON();
-    if (errorDetails.code === "ECONNABORTED") {
-      Alert.alert("Connection Timeout");
-    }
     return Promise.reject(error);
   }
 );

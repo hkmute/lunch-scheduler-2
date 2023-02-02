@@ -4,9 +4,15 @@ import theme from "./theme";
 const fonts = StyleSheet.create({
   title: {
     fontSize: 20,
+    fontWeight: "500",
   },
   body: {
     fontSize: 16,
+    fontWeight: "500",
+  },
+  large: {
+    fontSize: 24,
+    fontWeight: "500",
   },
   label: {
     marginLeft: 16,

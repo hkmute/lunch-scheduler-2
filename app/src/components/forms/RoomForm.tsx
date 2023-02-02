@@ -1,37 +1,34 @@
-import TextInputControl from "@/components/formControls/TextInputControl";
-import LoginButtons from "@/components/LoginButtons";
-import { UserContext } from "@/context/UserContext";
-import fonts from "@/styles/fonts";
-import { useContext } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { Button, Text, Icon } from "@rneui/themed";
+import { CreateCodeData } from "@/api/room/useCreateCode";
+import { EditCodeData } from "@/api/room/useEditCode";
+import { useCodeContext } from "@/context";
 import appColor from "@/styles/colors";
-import useCreateCode from "@/api/room/useCreateCode";
-import { RootStackParamList } from "@/navigation/types";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import fonts from "@/styles/fonts";
+import { Button, Text, Icon } from "@rneui/themed";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { useForm, useFieldArray } from "react-hook-form";
+import { View, StyleSheet } from "react-native";
+import TextInputControl from "../formControls/TextInputControl";
 
-type Props = NativeStackScreenProps<RootStackParamList, "CreateRoom">;
+type Props = {
+  mutate:
+    | UseMutateFunction<any, unknown, CreateCodeData>
+    | UseMutateFunction<any, unknown, EditCodeData>;
+  isLoading: boolean;
+  defaultValues?: {
+    name: string;
+    options: { id?: number; name: string }[];
+  };
+};
 
-const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
-  const user = useContext(UserContext);
-
-  const { mutate, isLoading } = useCreateCode({
-    onSuccess: (res) => {
-      const code = res.data?.code;
-      if (code) {
-        navigation.navigate("Room", { screen: "Today", params: { code } });
-      }
-    },
-  });
-
+const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
+  const { code } = useCodeContext();
   const {
     control,
     handleSubmit,
     getValues,
-    formState: { errors },
+    formState: { errors, dirtyFields, ...rest },
   } = useForm({
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: "",
       options: [{ name: "" }],
     },
@@ -62,20 +59,17 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleSubmitPress = handleSubmit(({ name, options }) => {
-    mutate({ name, options });
+    const optionsToSubmit = options.map((option, i) => {
+      if (!!dirtyFields.options?.[i]?.name) {
+        return { name: option.name };
+      }
+      return option;
+    });
+    mutate({ code, name, options: optionsToSubmit });
   });
 
-  if (!user.id) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loginText}>請登入或註冊</Text>
-        <LoginButtons />
-      </View>
-    );
-  }
-
   return (
-    <ScrollView style={styles.container}>
+    <View>
       <TextInputControl
         name="name"
         label="團隊名稱"
@@ -134,18 +128,11 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
         onPress={handleSubmitPress}
         loading={isLoading}
       />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  loginText: {
-    ...fonts.title,
-  },
   optionRow: {
     flexDirection: "row",
     marginRight: 8,
@@ -168,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateRoomScreen;
+export default RoomForm;

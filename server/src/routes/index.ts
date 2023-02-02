@@ -13,12 +13,18 @@ const router = express.Router();
 router.get("/me", guard, errorCatcher(mainController.getMe));
 router.post("/login", errorCatcher(authController.login));
 
+router.get("/code/:code", errorCatcher(codeController.getCodeDetails));
 router.post("/code", errorCatcher(codeController.createCode));
+router.put("/code/:code", errorCatcher(codeController.editCode));
 router.get("/code/:code/exist", errorCatcher(codeController.checkCodeExist));
 
 router.get("/options", errorCatcher(mainController.getOptions));
 
 router.get("/today/:code", errorCatcher(mainController.getToday));
+
+router.post("/vote", errorCatcher(mainController.vote));
+
+router.get("/history/:code", errorCatcher(mainController.getHistoryByCode));
 
 router.get(
   "/option-list",

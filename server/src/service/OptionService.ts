@@ -12,23 +12,6 @@ class OptionService {
     return options;
   };
 
-  getTodayOptions = async (code: string) => {
-    const options = await this.optionRepo.find({
-      relations: {
-        todayOptions: true,
-      },
-      where: {
-        todayOptions: {
-          code: {
-            code,
-          },
-          date: new Date(),
-        },
-      },
-    });
-    return options;
-  };
-
   createOptions = async (options: { name: string }[]) => {
     if (!options.length) {
       return [];

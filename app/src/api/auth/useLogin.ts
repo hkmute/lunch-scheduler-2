@@ -1,8 +1,8 @@
 import { createMutation } from "react-query-kit";
 import apiClient from "../apiClient";
-import * as SecureStore from "expo-secure-store";
-import { AppErrorResponse, AppSuccessResponse } from "@/types";
+import { AppErrorResponse } from "@/types";
 import { User } from "@/context/UserContext";
+import { handleLoginSuccess } from "@/auth/helper";
 
 interface LoginData {
   type: "google" | "apple";
@@ -17,11 +17,7 @@ interface LoginResponse {
 }
 
 const useLogin = (updateUser: (user: User) => void) =>
-  createMutation<
-    AppSuccessResponse<LoginResponse>,
-    LoginData,
-    AppErrorResponse<string>
-  >(
+  createMutation<LoginResponse, LoginData, AppErrorResponse<string>>(
     ({ type, id_token, displayName }) =>
       apiClient.post("/login", {
         type,
@@ -30,13 +26,8 @@ const useLogin = (updateUser: (user: User) => void) =>
       }),
     {
       async onSuccess(data, variables, context) {
-        const user = data.data;
-        if (user?.token) {
-          await SecureStore.setItemAsync("token", user.token);
-          apiClient.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${user.token}`;
-          updateUser(user);
+        if (data?.token) {
+          await handleLoginSuccess(data, updateUser);
         }
       },
     }

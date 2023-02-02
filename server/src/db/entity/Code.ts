@@ -1,13 +1,15 @@
-import { Column, Entity, ManyToOne, OneToMany, Unique } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, Unique } from "typeorm";
 import History from "./History";
 import OptionList from "./OptionList";
 import TodayOption from "./TodayOption";
 import AppUser from "./AppUser";
 import { DefaultColumns } from "./DefaultColumns";
+import Vote from "./Vote";
 
 @Entity()
 @Unique(["code"])
 class Code extends DefaultColumns {
+  @Index()
   @Column()
   code: string;
 
@@ -19,6 +21,9 @@ class Code extends DefaultColumns {
 
   @OneToMany(() => TodayOption, (option) => option.code)
   todayOptions: TodayOption[];
+
+  @OneToMany(() => Vote, (option) => option.code)
+  votes: Vote[];
 
   @OneToMany(() => History, (history) => history.code)
   history: History[];

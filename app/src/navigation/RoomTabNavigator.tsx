@@ -1,3 +1,4 @@
+import { useCodeContext } from "@/context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, useTheme } from "@rneui/themed";
@@ -12,7 +13,12 @@ const Tab = createBottomTabNavigator<RoomTabParamList>();
 
 const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
   const { theme } = useTheme();
-  const handleBack = () => navigation.navigate("Home");
+  const { updateCode } = useCodeContext();
+
+  const handleBack = async () => {
+    await updateCode("");
+    navigation.navigate("Home");
+  };
 
   return (
     <Tab.Navigator
@@ -24,9 +30,21 @@ const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
         headerRight: () => <Button title="退出團隊" onPress={handleBack} />,
       })}
     >
-      <Tab.Screen name="Today" component={TodayScreen} />
-      <Tab.Screen name="History" component={HistoryScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen
+        name="Today"
+        component={TodayScreen}
+        options={{ title: "今日" }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{ title: "歷史記錄" }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: "設定" }}
+      />
     </Tab.Navigator>
   );
 };
