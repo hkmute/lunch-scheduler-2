@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:build": "docker build -t hkmute/lunch-scheduler:latest .",
     "docker:run": "docker run --name lunch-scheduler-server --env-file .env.dev -p 8080:8080 -d hkmute/lunch-scheduler:latest",
-    "docker:push": "docker image push hkmute/lunch-scheduler"
+    "docker:push": "docker image push hkmute/lunch-scheduler",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "author": "",
   "license": "ISC",

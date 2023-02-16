@@ -14,10 +14,14 @@ app.use(...middleware);
 app.use(rootRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
+  res.send("Welcome");
 });
 
 app.use(errorHandler);
+
+app.use((req, res) => {
+  res.send("Hello");
+});
 
 app.listen(PORT, () => {
   console.log(`Listening at port ${PORT}`);
