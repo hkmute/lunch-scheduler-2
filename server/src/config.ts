@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: !process.env.NODE_ENV ? ".env.dev" : undefined });
 
 const CONFIG_SETTINGS = {
   NODE_ENV: process.env.NODE_ENV || "development",
