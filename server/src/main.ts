@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import rootRoutes from "./routes";
 import errorHandler from "./util/error/errorHandler";
 import middleware from "./middleware";
@@ -11,6 +12,7 @@ const PORT = CONFIG.PORT;
 init();
 
 app.use(...middleware);
+app.use("/static", express.static(path.join(__dirname, "static")));
 app.use(rootRoutes);
 
 app.get("/", (req, res) => {

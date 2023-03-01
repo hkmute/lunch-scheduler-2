@@ -4,7 +4,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "NODE_ENV=production node dist/main",
-    "build": "tsc --build --clean && tsc || echo build done",
+    "build": "yarn clean && tsc || echo build done && yarn copy-static",
+    "clean": "rm -rf ./dist",
+    "copy-static": "cp -r ./src/static ./dist/",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:build": "docker build -t hkmute/lunch-scheduler:latest .",
