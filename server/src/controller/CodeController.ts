@@ -14,8 +14,8 @@ class CodeController {
 
   checkCodeExist: RequestHandler = async (req, res, next) => {
     const { code } = req.params;
-    const isExist = await this.codeService.checkCodeExist(code);
-    return res.json({ isExist });
+    const result = await this.codeService.checkCodeExist(code);
+    return res.json(result);
   };
 
   getCodeDetails: RequestHandler = async (req, res) => {

@@ -9,10 +9,10 @@ class CodeService {
   }
 
   checkCodeExist = async (code: string) => {
-    const isExist = !!(await this.codeRepo.findOneBy({
+    const result = await this.codeRepo.findOneBy({
       code,
-    }));
-    return isExist;
+    });
+    return { isExist: !!result, optionListName: result?.optionList.name };
   };
 
   getCode = async (code: string) => {
