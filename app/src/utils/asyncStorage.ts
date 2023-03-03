@@ -16,3 +16,22 @@ export const asyncSetDeviceId = async (deviceId: string) => {
 export const asyncGetDeviceId = async () => {
   return await SecureStore.getItemAsync("deviceId");
 };
+
+export const asyncSetRoomHistory = async (
+  roomHistory: { code: string; optionListName: string }[]
+) => {
+  return await SecureStore.setItemAsync(
+    "room-history",
+    JSON.stringify(roomHistory)
+  );
+};
+
+export const asyncGetRoomHistory = async (): Promise<
+  {
+    code: string;
+    optionListName: string;
+  }[]
+> => {
+  const roomHistory = await SecureStore.getItemAsync("room-history");
+  return roomHistory ? JSON.parse(roomHistory) : [];
+};

@@ -21,7 +21,7 @@ const GuestOptionList: React.FC<Props> = ({ code, optionList }) => {
       <View style={styles.content}>
         <Text style={styles.contentText}>{optionList.name}</Text>
       </View>
-      <Text style={styles.title}>選項</Text>
+      <Text style={styles.title}>餐廳選項</Text>
       {optionList.options.map((option) => (
         <View key={option.id} style={styles.content}>
           <Text style={styles.contentText}>{option.name}</Text>

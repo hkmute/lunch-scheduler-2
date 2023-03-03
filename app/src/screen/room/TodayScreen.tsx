@@ -18,7 +18,7 @@ const TodayScreen: React.FC<Props> = () => {
     mutate({ code, todayOptionId, voter: deviceId });
   };
 
-  if (!data) {
+  if (!data || (Array.isArray(data) && data.length === 0)) {
     return (
       <View style={styles.container}>
         <Text style={styles.bodyText}>準備中。。。</Text>

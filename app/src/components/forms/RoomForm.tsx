@@ -77,7 +77,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
         rules={{ required: "必須填寫" }}
       />
       <View>
-        <Text style={fonts.label}>選項</Text>
+        <Text style={fonts.label}>餐廳選項</Text>
         {fields.map((field, index) => (
           <View key={field.id} style={styles.optionRow}>
             <View style={styles.optionField}>

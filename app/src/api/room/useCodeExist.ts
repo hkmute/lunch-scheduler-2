@@ -4,6 +4,7 @@ import apiClient from "../apiClient";
 
 type CodeExistRes = {
   isExist: boolean;
+  optionListName: string;
 };
 
 type CodeExistVar = {

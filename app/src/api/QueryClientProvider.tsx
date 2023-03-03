@@ -17,9 +17,11 @@ const QueryClientProvider: React.FC<Props> = ({ children }) => {
     defaultOptions: {
       queries: {
         onError: handleError(updateError),
+        retry: false,
       },
       mutations: {
         onError: handleError(updateError),
+        retry: false,
       },
     },
   });

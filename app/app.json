@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "lunch-scheduler",
+    "name": "ls",
     "slug": "lunch-scheduler",
-    "scheme": "lunch-scheduler",
+    "scheme": "eat-mud",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#455a64"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,16 +18,24 @@
     "assetBundlePatterns": ["**/*"],
     "plugins": ["expo-apple-authentication"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hkmute.lunchscheduler"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#455a64"
+      },
+      "package": "com.hkmute.lunchscheduler",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0b15b5df-0820-47a2-a2a4-d09ec5af0fc0"
+      }
     }
   }
 }

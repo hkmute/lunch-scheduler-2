@@ -14,6 +14,10 @@ const fonts = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
   },
+  small: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
   label: {
     marginLeft: 16,
     marginBottom: 4,

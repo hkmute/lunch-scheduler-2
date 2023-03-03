@@ -23,6 +23,9 @@ const useToday = createQuery<TodayRes, TodayVar, AppErrorResponse>(
   "today",
   ({ queryKey: [primaryKey, variables] }) => {
     return apiClient.get(`/today/${variables.code}`);
+  },
+  {
+    enabled: (data, variables) => !!variables.code,
   }
 );
 

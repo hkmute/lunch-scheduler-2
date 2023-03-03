@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
 import { API_HOST } from "@env";
-import { Alert } from "react-native";
 
 const apiClient = axios.create({
   baseURL: API_HOST,

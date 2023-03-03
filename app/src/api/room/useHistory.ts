@@ -41,6 +41,7 @@ const useHistory = createInfiniteQuery<
       };
     }
   },
+  enabled: (data, variables) => !!variables.code,
 });
 
 export default useHistory;
