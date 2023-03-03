@@ -79,7 +79,7 @@ class VoteService {
     schedule.scheduleJob("00 * * * *", async () => {
       const allCode = await this.codeService.getAllCode(); //TODO: hour config for code
       allCode.forEach(({ code }) => {
-        const defaultCreateHour = 8;
+        const defaultCreateHour = getHours(new Date().setUTCHours(8 - 8));
         if (getHours(new Date()) === defaultCreateHour) {
           this.createVoteCandidates(code);
         }
@@ -126,7 +126,7 @@ class VoteService {
     schedule.scheduleJob("00 * * * *", async () => {
       const allCode = await this.codeService.getAllCode(); //TODO: hour config for code
       allCode.forEach(({ code }) => {
-        const defaultCreateHour = 11;
+        const defaultCreateHour = getHours(new Date().setUTCHours(11 - 8));
         if (getHours(new Date()) === defaultCreateHour) {
           this.startLottery(code);
         }

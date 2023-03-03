@@ -9,8 +9,11 @@ class CodeService {
   }
 
   checkCodeExist = async (code: string) => {
-    const result = await this.codeRepo.findOneBy({
-      code,
+    const result = await this.codeRepo.findOne({
+      where: { code },
+      relations: {
+        optionList: true,
+      },
     });
     return { isExist: !!result, optionListName: result?.optionList.name };
   };
@@ -58,7 +61,7 @@ class CodeService {
   ): Promise<{ id: number; code: string }> => {
     const { nanoid } = await import("nanoid");
     const code = nanoid(12);
-    const isExist = await this.checkCodeExist(code);
+    const { isExist } = await this.checkCodeExist(code);
     if (isExist) {
       console.error("Code already exists. Create code again.");
       if (retried < 5) {
