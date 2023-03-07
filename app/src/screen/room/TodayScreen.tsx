@@ -48,7 +48,7 @@ const TodayScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.bodyText}>今日結果係</Text>
+      <Text style={styles.bodyText}>今日食</Text>
       <Text style={styles.resultText}>{data.option.name}</Text>
     </View>
   );

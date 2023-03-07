@@ -2,15 +2,14 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { Button, useTheme } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, Pressable, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import TextInput from "@/components/viewComponents/TextInput";
 import useCodeExist from "@/api/room/useCodeExist";
 import { useUpdateError } from "@/context/ErrorContext";
 import { useCodeContext } from "@/context";
-import { asyncGetRoomHistory, asyncSetRoomHistory } from "@/utils/asyncStorage";
+import { asyncGetRoomHistory } from "@/utils/asyncStorage";
 import theme from "@/styles/theme";
-import fonts from "@/styles/fonts";
 import updateRoomHistory from "@/utils/updateRoomHistory";
 import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
@@ -50,7 +49,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     if (!codeInput) {
       return inputRef.current?.shake();
     }
-    handleNavigateToRoom(codeInput, refetch);
+    handleNavigateToRoom(codeInput, refetch)();
   };
 
   const handleNavigateToRoom = useCallback(
@@ -99,6 +98,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         {roomHistory.map((history, index) => (
           <RoomHistoryItem
             key={history.code}
+            index={index}
             roomHistoryItem={history}
             handleNavigateToRoom={handleNavigateToRoom}
           />
@@ -129,32 +129,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   historyWrapper: {
-    paddingHorizontal: 8,
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 16,
     backgroundColor: theme.lightColors?.secondary,
     borderRadius: 8,
-  },
-  historyItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: 8,
-    paddingVertical: 8,
-  },
-  historyText: {
-    ...fonts.body,
-    color: theme.lightColors?.white,
-    marginHorizontal: 4,
-  },
-  historyCode: {
-    ...fonts.small,
-    color: theme.lightColors?.grey5,
-  },
-  divider: {
-    borderTopColor: theme.lightColors?.primary,
-    borderTopWidth: 1,
   },
   buttonWrapper: {
     marginHorizontal: 8,

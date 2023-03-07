@@ -11,6 +11,11 @@ import NavContainer from "./navigation/NavContainer";
 import { CodeContextProvider } from "./context/CodeContext";
 import QueryClientProvider from "./api/QueryClientProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { sentryInit } from "./utils/sentry";
+import SplashScreenManager from "./components/SplashScreenManager";
+import Constant from "expo-constants"
+
+sentryInit();
 
 export default function App() {
   return (
@@ -23,6 +28,7 @@ export default function App() {
                 <UserContextProvider>
                   <CodeContextProvider>
                     <NavContainer>
+                      <SplashScreenManager />
                       <StatusBar style="light" />
                       <ErrorModal />
                       <RootStackNavigator />
