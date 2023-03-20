@@ -37,7 +37,11 @@ const SplashScreenManager: React.FC = () => {
             opacity: animation,
           },
         ]}
-        source={{ uri: Constants.expoConfig?.splash?.image }}
+        source={{
+          uri:
+            Constants.expoConfig?.splash?.imageUrl ??
+            Constants.expoConfig?.splash?.image,
+        }}
         onLoadEnd={onImageLoaded}
       />
     );
