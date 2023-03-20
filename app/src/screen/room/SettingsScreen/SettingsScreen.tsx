@@ -1,3 +1,5 @@
+import * as Application from "expo-application";
+import * as Updates from "expo-updates";
 import useCodeSettings from "@/api/room/useCodeSettings";
 import LoginButtons from "@/components/LoginButtons";
 import LogoutButton from "@/components/LogoutButton";
@@ -36,6 +38,10 @@ const SettingsScreen: React.FC<Props> = () => {
       {data && !data.isOwner && (
         <GuestOptionList code={data.code} optionList={data.optionList} />
       )}
+      <Text style={styles.version}>
+        {Application.nativeApplicationVersion}.{Application.nativeBuildVersion}
+        {Updates.updateId?.slice(-4) ?? "0000"}
+      </Text>
     </ScrollView>
   );
 };
@@ -53,6 +59,11 @@ const styles = StyleSheet.create({
     ...fonts.title,
     color: appColor?.grey0,
     marginRight: 16,
+  },
+  version: {
+    ...fonts.small,
+    color: appColor?.grey3,
+    textAlign: "right",
   },
 });
 

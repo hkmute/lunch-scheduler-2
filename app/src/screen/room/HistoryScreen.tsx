@@ -45,10 +45,6 @@ const HistoryScreen: React.FC<Props> = () => {
     }
   };
 
-  if (isFetching) {
-    return null;
-  }
-
   return (
     <FlatList
       data={dataList}
