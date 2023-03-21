@@ -20,13 +20,16 @@ const GoogleAuth: React.FC = () => {
   const { updateUser } = useUserContext();
   const login = useLogin(updateUser);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: EXPO_GOOGLE_GUID,
-    iosClientId: IOS_GOOGLE_GUID,
-    androidClientId: ANDROID_GOOGLE_GUID,
-    webClientId: WEB_GOOGLE_GUID,
-    responseType: ResponseType.IdToken,
-  });
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest(
+    {
+      expoClientId: EXPO_GOOGLE_GUID,
+      iosClientId: IOS_GOOGLE_GUID,
+      androidClientId: ANDROID_GOOGLE_GUID,
+      webClientId: WEB_GOOGLE_GUID,
+      responseType: ResponseType.IdToken,
+    },
+    { useProxy: false }
+  );
 
   useEffect(() => {
     if (response?.type === "success") {

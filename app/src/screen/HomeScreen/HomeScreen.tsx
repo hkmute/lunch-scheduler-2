@@ -13,6 +13,7 @@ import theme from "@/styles/theme";
 import updateRoomHistory from "@/utils/updateRoomHistory";
 import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
+import VersionText from "@/components/viewComponents/VersionText";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -114,6 +115,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         color="secondary"
         onPress={handleNavigateToCreate}
       />
+      <VersionText containerStyle={styles.versionContainer} />
     </SafeAreaView>
   );
 };
@@ -146,6 +148,11 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     fontWeight: "600",
+  },
+  versionContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });
 

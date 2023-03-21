@@ -1,6 +1,7 @@
 import useEditCode from "@/api/room/useEditCode";
 import RoomForm from "@/components/forms/RoomForm";
 import { showToast } from "@/utils/toast";
+import updateRoomHistory from "@/utils/updateRoomHistory";
 import { View } from "react-native";
 import CodeRow from "./CodeRow";
 
@@ -15,8 +16,12 @@ type Props = {
 
 const OwnerOptionList: React.FC<Props> = ({ code, optionList }) => {
   const { mutate, isLoading } = useEditCode({
-    onSuccess: () => {
+    onSuccess: async (data, variables) => {
       showToast("修改成功");
+      await updateRoomHistory({
+        code,
+        optionListName: variables.name,
+      });
     },
   });
 

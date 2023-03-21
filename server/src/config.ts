@@ -13,6 +13,7 @@ const CONFIG_SETTINGS = {
   GUID: [
     process.env.EXPO_GOOGLE_GUID,
     process.env.IOS_GOOGLE_GUID,
+    process.env.IOS_GOOGLE_GUID_DEV,
     process.env.ANDROID_GOOGLE_GUID,
     process.env.WEB_GOOGLE_GUID,
   ].filter((guid): guid is string => !!guid),

@@ -11,6 +11,7 @@ import { Text, ScrollView, View, StyleSheet } from "react-native";
 import { RoomTabScreenProps } from "../../../navigation/types";
 import GuestOptionList from "./components/GuestOptionList";
 import OwnerOptionList from "./components/OwnerOptionList";
+import VersionText from "@/components/viewComponents/VersionText";
 
 type Props = RoomTabScreenProps<"Settings">;
 
@@ -41,10 +42,7 @@ const SettingsScreen: React.FC<Props> = () => {
       {data && !data.isOwner && (
         <GuestOptionList code={data.code} optionList={data.optionList} />
       )}
-      <Text style={styles.version}>
-        {Application.nativeApplicationVersion}.{Application.nativeBuildVersion}
-        {Updates.updateId?.slice(-4) ?? "0000"}
-      </Text>
+      <VersionText />
     </ScrollView>
   );
 };
@@ -62,11 +60,6 @@ const styles = StyleSheet.create({
     ...fonts.title,
     color: appColor?.grey0,
     marginRight: 16,
-  },
-  version: {
-    ...fonts.small,
-    color: appColor?.grey3,
-    textAlign: "right",
   },
 });
 

@@ -64,6 +64,7 @@ const HistoryScreen: React.FC<Props> = () => {
       onRefresh={handleRefetch}
       refreshing={isFetching}
       onEndReached={handleEndReach}
+      onEndReachedThreshold={0.2}
       initialNumToRender={LIMIT}
     />
   );

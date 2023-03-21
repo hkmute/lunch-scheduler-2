@@ -1,5 +1,4 @@
 declare module "@env" {
-  export const PROJECT_NAME_FOR_PROXY: string;
   export const APP_ENV: "development" | "preview" | "production";
   export const API_HOST: string;
   export const EXPO_GOOGLE_GUID: string;
