@@ -1,5 +1,3 @@
-import * as Application from "expo-application";
-import * as Updates from "expo-updates";
 import useCodeSettings from "@/api/room/useCodeSettings";
 import LoginButtons from "@/components/LoginButtons";
 import LogoutButton from "@/components/LogoutButton";
@@ -7,7 +5,13 @@ import { useCodeContext, useUserContext } from "@/context";
 import appColor from "@/styles/colors";
 import fonts from "@/styles/fonts";
 import { useEffect } from "react";
-import { Text, ScrollView, View, StyleSheet } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+} from "react-native";
 import { RoomTabScreenProps } from "../../../navigation/types";
 import GuestOptionList from "./components/GuestOptionList";
 import OwnerOptionList from "./components/OwnerOptionList";
@@ -25,30 +29,39 @@ const SettingsScreen: React.FC<Props> = () => {
   }, [user]);
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={styles.container}
+      keyboardVerticalOffset={100}
     >
-      {!user.id && <LoginButtons />}
-      {!!user.id && (
-        <View style={styles.userRow}>
-          <Text style={styles.userText}>{user.displayName}</Text>
-          <LogoutButton />
-        </View>
-      )}
-      {data && data.isOwner && (
-        <OwnerOptionList code={data.code} optionList={data.optionList} />
-      )}
-      {data && !data.isOwner && (
-        <GuestOptionList code={data.code} optionList={data.optionList} />
-      )}
-      <VersionText />
-    </ScrollView>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {!user.id && <LoginButtons />}
+        {!!user.id && (
+          <View style={styles.userRow}>
+            <Text style={styles.userText}>{user.displayName}</Text>
+            <LogoutButton />
+          </View>
+        )}
+        {data && data.isOwner && (
+          <OwnerOptionList code={data.code} optionList={data.optionList} />
+        )}
+        {data && !data.isOwner && (
+          <GuestOptionList code={data.code} optionList={data.optionList} />
+        )}
+        <VersionText />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollContainer: {
     paddingVertical: 16,
   },
   userRow: {

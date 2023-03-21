@@ -27,6 +27,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
     handleSubmit,
     getValues,
     formState: { errors, dirtyFields, ...rest },
+    reset,
   } = useForm({
     defaultValues: defaultValues || {
       name: "",

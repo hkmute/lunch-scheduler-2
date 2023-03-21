@@ -7,6 +7,7 @@ import SettingsScreen from "../screen/room/SettingsScreen";
 import TodayScreen from "../screen/room/TodayScreen";
 import { RoomTabParamList, RootStackParamList } from "./types";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Room">;
 
@@ -15,9 +16,11 @@ const Tab = createBottomTabNavigator<RoomTabParamList>();
 const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
   const { theme } = useTheme();
   const { updateCode } = useCodeContext();
+  const queryClient = useQueryClient();
 
   const handleBack = async () => {
     await updateCode("");
+    queryClient.clear();
     navigation.navigate("Home");
   };
 

@@ -1,6 +1,11 @@
 import LoginButtons from "@/components/LoginButtons";
 import fonts from "@/styles/fonts";
-import { View, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import { Text } from "@rneui/themed";
 import useCreateCode from "@/api/room/useCreateCode";
 import { RootStackParamList } from "@/navigation/types";
@@ -38,15 +43,23 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <RoomForm mutate={mutate} isLoading={isLoading} />
-    </ScrollView>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={styles.container}
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <RoomForm mutate={mutate} isLoading={isLoading} />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
     padding: 16,
   },
   loginText: {
