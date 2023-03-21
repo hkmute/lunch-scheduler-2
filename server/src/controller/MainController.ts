@@ -48,7 +48,7 @@ class MainController {
     const { code } = req.params;
     const history = await this.historyService.getCodeHistory(
       code,
-      getPaginationParams(req.params)
+      getPaginationParams(req.query)
     );
     return res.json(history);
   };

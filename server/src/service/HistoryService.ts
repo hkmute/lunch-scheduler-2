@@ -45,8 +45,8 @@ class HistoryService {
     return {
       data: history[0],
       totalCount: history[1],
-      limit: params.limit || 10,
-      offset: params.offset || 0,
+      limit: params.limit,
+      offset: params.offset,
     };
   };
 

@@ -24,12 +24,14 @@ type HistoryVar = {
   offset?: number;
 };
 
+export const USE_HISTORY_KEY = "history";
+
 const useHistory = createInfiniteQuery<
   HistoryRes,
   HistoryVar,
   AppErrorResponse
 >({
-  primaryKey: "history",
+  primaryKey: USE_HISTORY_KEY,
   queryFn: ({ queryKey: [primaryKey, { code, ...params }], pageParam }) => {
     return apiClient.get(`/history/${code}`, { params: pageParam ?? params });
   },

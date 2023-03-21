@@ -17,9 +17,7 @@ module.exports = () => {
       },
       updates: {
         fallbackToCacheTimeout: 0,
-        url: isExpoGo
-          ? undefined
-          : "https://u.expo.dev/0b15b5df-0820-47a2-a2a4-d09ec5af0fc0",
+        url: "https://u.expo.dev/0b15b5df-0820-47a2-a2a4-d09ec5af0fc0",
       },
       assetBundlePatterns: ["**/*"],
       plugins: ["expo-apple-authentication", "sentry-expo"],

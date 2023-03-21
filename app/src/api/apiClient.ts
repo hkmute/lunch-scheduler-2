@@ -24,7 +24,13 @@ apiClient.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    console.log("response interceptor", response.config.url, response.data);
+    console.log(
+      "response interceptor",
+      response.config.url,
+      response.config.params,
+      response.config.data,
+      response.data
+    );
     return response.data.data;
   },
   function (error: AxiosError) {

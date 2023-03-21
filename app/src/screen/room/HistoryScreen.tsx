@@ -1,36 +1,34 @@
-import useHistory, { historyItem } from "@/api/room/useHistory";
+import useHistory, {
+  historyItem,
+  USE_HISTORY_KEY,
+} from "@/api/room/useHistory";
 import ItemSeparator from "@/components/viewComponents/ItemSeparator";
 import { useCodeContext } from "@/context";
 import fonts from "@/styles/fonts";
 import theme from "@/styles/theme";
 import { formatDate } from "@/utils/dateHelper";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FlatList, ListRenderItem, StyleSheet, Text, View } from "react-native";
 import { RoomTabScreenProps } from "../../navigation/types";
 
 type Props = RoomTabScreenProps<"History">;
 
+const LIMIT = 20;
+
 const HistoryScreen: React.FC<Props> = () => {
+  const queryClient = useQueryClient();
   const { code } = useCodeContext();
-  const {
-    data,
-    refetch,
-    fetchNextPage,
-    isFetching,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useHistory({
-    variables: { code },
+  const { data, refetch, fetchNextPage, isFetching, hasNextPage } = useHistory({
+    variables: { code, limit: LIMIT },
   });
 
-  const dataList = useMemo(
-    () =>
-      data?.pages.reduce<historyItem[]>(
-        (acc, cur) => [...acc, ...cur.data],
-        []
-      ),
-    [data]
-  );
+  const dataList = useMemo(() => {
+    return data?.pages.reduce<historyItem[]>(
+      (acc, cur) => [...acc, ...cur.data],
+      []
+    );
+  }, [data]);
 
   const renderItem: ListRenderItem<historyItem> = ({ item, index }) => (
     <View key={`${item.id}-${index}`} style={styles.item}>
@@ -40,9 +38,22 @@ const HistoryScreen: React.FC<Props> = () => {
   );
 
   const handleEndReach = () => {
-    if (hasNextPage && !isFetchingNextPage) {
+    if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
+  };
+
+  const handleRefetch = () => {
+    queryClient.setQueriesData(
+      { queryKey: [USE_HISTORY_KEY], active: true },
+      (data) => {
+        return {
+          pages: data?.pages.slice(0, 1) ?? [],
+          pageParams: data?.pageParams.slice(0, 1) ?? [],
+        };
+      }
+    );
+    refetch();
   };
 
   return (
@@ -50,9 +61,10 @@ const HistoryScreen: React.FC<Props> = () => {
       data={dataList}
       renderItem={renderItem}
       ItemSeparatorComponent={ItemSeparator}
-      onRefresh={refetch}
+      onRefresh={handleRefetch}
       refreshing={isFetching}
       onEndReached={handleEndReach}
+      initialNumToRender={LIMIT}
     />
   );
 };

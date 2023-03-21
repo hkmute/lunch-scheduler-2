@@ -7,6 +7,7 @@ import { RootStackParamList } from "@/navigation/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCodeContext, useUserContext } from "@/context";
 import RoomForm from "@/components/forms/RoomForm";
+import updateRoomHistory from "@/utils/updateRoomHistory";
 
 type Props = NativeStackScreenProps<RootStackParamList, "CreateRoom">;
 
@@ -14,11 +15,15 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
   const user = useUserContext();
   const { updateCode } = useCodeContext();
   const { mutate, isLoading } = useCreateCode({
-    onSuccess: async (data) => {
+    onSuccess: async (data, variables) => {
       const code = data?.code;
       if (code) {
         await updateCode(code);
         navigation.navigate("Room", { screen: "Today" });
+        await updateRoomHistory({
+          code,
+          optionListName: variables.name,
+        });
       }
     },
   });

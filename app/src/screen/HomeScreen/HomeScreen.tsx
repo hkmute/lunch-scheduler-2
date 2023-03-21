@@ -27,10 +27,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   >([]);
 
   useEffect(() => {
-    asyncGetRoomHistory().then((data) => {
-      setRoomHistory(data);
-    });
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () =>
+      asyncGetRoomHistory().then((data) => {
+        setRoomHistory(data);
+      })
+    );
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (code) {
@@ -58,11 +61,10 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       if (result.data?.isExist) {
         await updateCode(code);
         navigation.navigate("Room", { screen: "Today" });
-        const newRoomHistory = await updateRoomHistory({
+        await updateRoomHistory({
           code,
           optionListName: result.data.optionListName,
         });
-        setRoomHistory(newRoomHistory);
         setCodeInput("");
         return;
       } else {

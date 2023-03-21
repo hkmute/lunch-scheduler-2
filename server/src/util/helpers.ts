@@ -49,7 +49,7 @@ export const preprocessOptions = (options: Option[]) => {
 };
 
 export const getPaginationParams = (query: Record<string, any>) => {
-  const limit = parseInt(query.limit ?? 0);
+  const limit = parseInt(query.limit ?? 10);
   const offset = parseInt(query.offset ?? 0);
   validateReq("limit", limit, "number");
   validateReq("offset", offset, "number");

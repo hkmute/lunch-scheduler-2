@@ -24,7 +24,10 @@ const SettingsScreen: React.FC<Props> = () => {
   }, [user]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       {!user.id && <LoginButtons />}
       {!!user.id && (
         <View style={styles.userRow}>
