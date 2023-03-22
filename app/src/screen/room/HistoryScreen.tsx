@@ -66,6 +66,10 @@ const HistoryScreen: React.FC<Props> = () => {
       onEndReached={handleEndReach}
       onEndReachedThreshold={0.2}
       initialNumToRender={LIMIT}
+      contentContainerStyle={
+        !!dataList?.length ? undefined : styles.emptyContainer
+      }
+      ListEmptyComponent={<Text style={styles.emptyText}>未有記錄</Text>}
     />
   );
 };
@@ -84,6 +88,14 @@ const styles = StyleSheet.create({
   name: {
     ...fonts.body,
     flex: 1,
+    textAlign: "center",
+  },
+  emptyContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  emptyText: {
+    ...fonts.body,
     textAlign: "center",
   },
 });

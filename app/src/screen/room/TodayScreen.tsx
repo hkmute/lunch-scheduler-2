@@ -30,7 +30,7 @@ const TodayScreen: React.FC<Props> = () => {
     return (
       <View style={styles.container}>
         {data.map((item) => (
-          <View key={item.id}>
+          <View key={item.id} style={styles.buttonWrapper}>
             <Button
               type={
                 item.votes?.find(({ voter }) => voter === deviceId)
@@ -59,6 +59,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
+  },
+  buttonWrapper: {
+    marginBottom: 16,
   },
   bodyText: {
     ...fonts.body,

@@ -35,7 +35,7 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
 
   if (!user.id) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.scrollContainer]}>
         <Text style={styles.loginText}>請登入或註冊</Text>
         <LoginButtons />
       </View>
