@@ -11,10 +11,13 @@ class HistoryService {
   }
 
   getTodayResult = async (code: string) => {
+    const now = new Date();
+    const timeZoneOffset = now.getTimezoneOffset() / 60;
+
     const todayResult = await this.historyRepo.findOne({
       where: {
         code: { code },
-        createdDate: startOfDay(addHours(new Date(), 8)),
+        date: startOfDay(addHours(new Date(), 8 + timeZoneOffset)),
       },
       relations: {
         option: true,
