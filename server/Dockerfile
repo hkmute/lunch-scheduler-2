@@ -1,4 +1,4 @@
-FROM node:16 AS builder
+FROM node:18 AS builder
 RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
 ENV YARN_CACHE_FOLDER=/usr/local/yarn-cache
 VOLUME /usr/local/yarn-cache
@@ -8,7 +8,7 @@ RUN yarn install --prod --network-timeout 600000
 COPY . .
 RUN yarn build
 
-FROM node:16-alpine3.16
+FROM node:18-alpine3.16
 ENV NODE_ENV production
 COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
 USER node

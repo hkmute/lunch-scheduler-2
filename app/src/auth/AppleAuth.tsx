@@ -1,6 +1,7 @@
 import useLogin from "@/api/auth/useLogin";
 import { useUserContext } from "@/context";
 import * as AppleAuthentication from "expo-apple-authentication";
+import * as Application from "expo-application";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 
@@ -32,9 +33,13 @@ const AppleAuth: React.FC = () => {
         login.mutate({
           type: "apple",
           id_token: credential.identityToken,
+          authorizationCode: credential.authorizationCode,
           displayName: credential.fullName
             ? `${credential.fullName?.givenName} ${credential.fullName?.familyName}`
             : undefined,
+          isDev:
+            Application.applicationId === "host.exp.exponent" ||
+            !!Application.applicationId?.includes("dev"),
         });
       }
     } catch (err) {

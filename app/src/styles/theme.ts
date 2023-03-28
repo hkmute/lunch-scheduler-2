@@ -13,6 +13,7 @@ const theme = createTheme({
     Button: (props, theme) => ({
       buttonStyle: {
         borderRadius: props.size === "sm" ? 12 : 16,
+        borderWidth: props.type === "outline" ? 1 : 0,
       },
       titleStyle: {
         fontSize: props.size === "sm" ? 14 : 18,

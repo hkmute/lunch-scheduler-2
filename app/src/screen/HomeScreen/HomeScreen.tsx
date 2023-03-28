@@ -14,6 +14,7 @@ import updateRoomHistory from "@/utils/updateRoomHistory";
 import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
 import VersionText from "@/components/viewComponents/VersionText";
+import { API_HOST } from "@env";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 

@@ -13,7 +13,6 @@ import QueryClientProvider from "./api/QueryClientProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { sentryInit } from "./utils/sentry";
 import SplashScreenManager from "./components/SplashScreenManager";
-import Constant from "expo-constants"
 
 sentryInit();
 

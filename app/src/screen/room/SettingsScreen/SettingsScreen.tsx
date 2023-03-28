@@ -1,6 +1,5 @@
 import useCodeSettings from "@/api/room/useCodeSettings";
 import LoginButtons from "@/components/LoginButtons";
-import LogoutButton from "@/components/LogoutButton";
 import { useCodeContext, useUserContext } from "@/context";
 import appColor from "@/styles/colors";
 import fonts from "@/styles/fonts";
@@ -16,6 +15,7 @@ import { RoomTabScreenProps } from "../../../navigation/types";
 import GuestOptionList from "./components/GuestOptionList";
 import OwnerOptionList from "./components/OwnerOptionList";
 import VersionText from "@/components/viewComponents/VersionText";
+import UserSettings from "./components/UserSettings";
 
 type Props = RoomTabScreenProps<"Settings">;
 
@@ -42,7 +42,7 @@ const SettingsScreen: React.FC<Props> = () => {
         {!!user.id && (
           <View style={styles.userRow}>
             <Text style={styles.userText}>{user.displayName}</Text>
-            <LogoutButton />
+            <UserSettings />
           </View>
         )}
         {data && data.isOwner && (

@@ -4,13 +4,15 @@ import {
   mainController,
   optionListController,
   codeController,
+  userController,
 } from "../controller";
 import guard from "../middleware/guard";
 import errorCatcher from "../util/error/errorCatcher";
 
 const router = express.Router();
 
-router.get("/me", guard, errorCatcher(mainController.getMe));
+router.get("/me", guard, errorCatcher(userController.getMe));
+router.delete("/me", guard, errorCatcher(userController.deleteMe));
 router.post("/login", errorCatcher(authController.login));
 
 router.get("/code/:code", errorCatcher(codeController.getCodeDetails));

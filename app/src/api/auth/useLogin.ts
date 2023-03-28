@@ -7,7 +7,9 @@ import { handleLoginSuccess } from "@/auth/helper";
 interface LoginData {
   type: "google" | "apple";
   id_token: string;
+  authorizationCode: string | null;
   displayName?: string | null;
+  isDev?: boolean;
 }
 
 interface LoginResponse {
@@ -18,11 +20,13 @@ interface LoginResponse {
 
 const useLogin = (updateUser: (user: User) => void) =>
   createMutation<LoginResponse, LoginData, AppErrorResponse<string>>(
-    ({ type, id_token, displayName }) =>
+    ({ type, id_token, displayName, authorizationCode, isDev }) =>
       apiClient.post("/login", {
         type,
         id_token,
         displayName,
+        authorizationCode,
+        isDev,
       }),
     {
       async onSuccess(data, variables, context) {

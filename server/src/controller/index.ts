@@ -12,15 +12,16 @@ import AuthController from "./AuthController";
 import CodeController from "./CodeController";
 import MainController from "./MainController";
 import OptionListController from "./OptionListController";
+import UserController from "./UserController";
 
-export const authController = new AuthController(authService);
 export const mainController = new MainController(
-  userService,
   optionService,
   todayOptionService,
   historyService,
   voteService
 );
+export const authController = new AuthController(authService);
+export const userController = new UserController(userService);
 export const optionListController = new OptionListController(
   optionService,
   optionListService

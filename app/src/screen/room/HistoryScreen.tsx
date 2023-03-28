@@ -69,7 +69,7 @@ const HistoryScreen: React.FC<Props> = () => {
       contentContainerStyle={
         !!dataList?.length ? undefined : styles.emptyContainer
       }
-      ListEmptyComponent={<Text style={styles.emptyText}>未有記錄</Text>}
+      ListEmptyComponent={!isFetching ? <Text style={styles.emptyText}>未有記錄</Text> : undefined}
     />
   );
 };
