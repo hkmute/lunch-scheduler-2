@@ -1,7 +1,8 @@
 import appColor from "@/styles/colors";
-import { Animated, Dimensions, SafeAreaView, StyleSheet } from "react-native";
+import { Animated, Dimensions, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomSheet as RNEBottomSheet } from "@rneui/themed";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const BottomSheet: React.FC<Props> = ({ children, visible, handleClose }) => {
+  const insets = useSafeAreaInsets();
   const translateAnim = useRef(new Animated.Value(100)).current;
 
   useEffect(() => {
@@ -50,7 +52,18 @@ const BottomSheet: React.FC<Props> = ({ children, visible, handleClose }) => {
       onBackdropPress={handleBackdropPress}
     >
       <Animated.View style={{ transform: [{ translateY: translateAnim }] }}>
-        <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+        <View
+          style={[
+            styles.container,
+            {
+              paddingBottom: insets.bottom,
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
+            },
+          ]}
+        >
+          {children}
+        </View>
       </Animated.View>
     </RNEBottomSheet>
   );
