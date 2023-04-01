@@ -37,6 +37,8 @@ const TodayScreen: React.FC<Props> = () => {
   if (Array.isArray(data)) {
     return (
       <View style={styles.container}>
+        <Text style={styles.bodyText}>投票時段</Text>
+        <Text style={styles.bodyText}>(8:00 - 11:00)</Text>
         {data.map((item) => (
           <View key={item.id} style={styles.buttonWrapper}>
             <Button
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginBottom: 16,
+    marginTop: 12,
   },
   button: {
     borderWidth: 1,
