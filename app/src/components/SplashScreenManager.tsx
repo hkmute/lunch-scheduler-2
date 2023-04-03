@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { Animated, StyleSheet } from "react-native";
 import Constants from "expo-constants";
+import splashImage from "assets/splash.png";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,11 +38,7 @@ const SplashScreenManager: React.FC = () => {
             opacity: animation,
           },
         ]}
-        source={{
-          uri:
-            Constants.expoConfig?.splash?.imageUrl ??
-            Constants.expoConfig?.splash?.image,
-        }}
+        source={splashImage}
         onLoadEnd={onImageLoaded}
       />
     );
