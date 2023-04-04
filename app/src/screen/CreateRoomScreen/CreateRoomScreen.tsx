@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Text } from "@rneui/themed";
 import useCreateCode from "@/api/room/useCreateCode";
@@ -44,7 +45,7 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}
       keyboardVerticalOffset={100}
     >

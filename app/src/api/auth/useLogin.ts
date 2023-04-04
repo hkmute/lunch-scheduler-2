@@ -7,7 +7,7 @@ import { handleLoginSuccess } from "@/auth/helper";
 interface LoginData {
   type: "google" | "apple";
   id_token: string;
-  authorizationCode: string | null;
+  authorizationCode?: string | null;
   displayName?: string | null;
   isDev?: boolean;
 }

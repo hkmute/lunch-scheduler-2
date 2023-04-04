@@ -111,7 +111,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
         {optionsLength < 20 && (
           <Button
             color="secondary"
-            style={styles.addButton}
+            containerStyle={styles.addButton}
             icon={
               <Icon
                 type="material-community"
@@ -124,7 +124,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
         )}
       </View>
       <Button
-        style={styles.submitButton}
+        containerStyle={styles.submitButton}
         title="確認"
         onPress={handleSubmitPress}
         loading={isLoading}
