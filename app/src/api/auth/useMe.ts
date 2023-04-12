@@ -13,28 +13,21 @@ interface MeResponse {
 }
 
 const useMe = (updateUser: (user: User) => void) =>
-  createQuery<
-    AppSuccessResponse<MeResponse> | { data: undefined },
-    void,
-    AppErrorResponse<string>
-  >(
+  createQuery<MeResponse | null, void, string>(
     "me",
     async () => {
       const token = await SecureStore.getItemAsync("token");
       if (!token) {
-        return { data: undefined };
+        return null;
       }
-      return apiClient.get<
-        AppSuccessResponse<MeResponse>,
-        AppSuccessResponse<MeResponse>
-      >("/me", {
+      return apiClient.get("/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
     },
     {
       retry: false,
       onSuccess: async (data) => {
-        const user = data.data;
+        const user = data;
         if (user) {
           await SecureStore.setItemAsync("token", user.token);
           apiClient.defaults.headers.common[

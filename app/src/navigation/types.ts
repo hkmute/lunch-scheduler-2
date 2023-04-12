@@ -29,7 +29,7 @@ export type RoomTabScreenProps<T extends keyof RoomTabParamList> =
     NativeStackScreenProps<RootStackParamList>
   >;
 
-export type TodayScreenParamList = { code: string };
+export type TodayScreenParamList = undefined;
 export type HistoryScreenParamList = undefined;
 export type SettingsScreenParamList = undefined;
 

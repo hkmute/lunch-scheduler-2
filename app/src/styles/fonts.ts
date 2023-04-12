@@ -4,9 +4,23 @@ import theme from "./theme";
 const fonts = StyleSheet.create({
   title: {
     fontSize: 20,
+    fontWeight: "500",
   },
   body: {
     fontSize: 16,
+    fontWeight: "500",
+  },
+  light: {
+    fontSize: 16,
+    fontWeight: "400",
+  },
+  large: {
+    fontSize: 24,
+    fontWeight: "500",
+  },
+  small: {
+    fontSize: 14,
+    fontWeight: "500",
   },
   label: {
     marginLeft: 16,

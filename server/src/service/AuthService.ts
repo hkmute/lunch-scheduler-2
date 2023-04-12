@@ -2,6 +2,7 @@ import jwt, {
   JwtHeader,
   JwtPayload,
   SigningKeyCallback,
+  SignOptions,
   VerifyOptions,
 } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
@@ -15,6 +16,7 @@ type UserInfo = {
   username: string;
   email?: string;
   displayName?: string;
+  authorizationCode?: string;
 };
 class AuthService {
   private appUserRepo: Repository<AppUser>;
@@ -56,6 +58,22 @@ class AuthService {
       expiresIn: "7d",
     });
     return token;
+  };
+
+  static signAppleClientSecret = (isDev = false) => {
+    const secret = Buffer.from(CONFIG.APPLE_SECRET!, "base64").toString(
+      "ascii"
+    );
+    const signOptions: SignOptions = {
+      algorithm: "ES256",
+      keyid: CONFIG.APPLE_KEY_ID,
+      expiresIn: "6m",
+      issuer: CONFIG.APPLE_TEAM_ID,
+      audience: "https://appleid.apple.com",
+      subject: isDev ? CONFIG.APPLE_BUNDLE_ID_DEV : CONFIG.APPLE_BUNDLE_ID,
+    };
+    const clientSecret = jwt.sign({}, secret, signOptions);
+    return clientSecret;
   };
 
   googleLogin = async (id_token: string) => {
@@ -133,12 +151,12 @@ class AuthService {
     }
   };
 
-  appLogin = async (user: UserInfo) => {
+  appLogin = async (user: UserInfo, isDev: boolean) => {
     const appUser = await this.appUserRepo.findOneBy({
       username: user.username,
     });
     if (!appUser) {
-      return this.register(user);
+      return this.register(user, isDev);
     }
     const token = AuthService.signUserToken(appUser.id);
     return {
@@ -148,10 +166,36 @@ class AuthService {
     };
   };
 
-  private register = async (user: UserInfo) => {
+  private register = async (user: UserInfo, isDev: boolean) => {
+    let appleRefreshToken: string | null = null;
+    if (user.authorizationCode) {
+      // apple user
+      // generate apple client secret
+      const clientSecret = AuthService.signAppleClientSecret(isDev);
+      // generate and validate tokens
+      const result = await fetch("https://appleid.apple.com/auth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: isDev
+            ? CONFIG.APPLE_BUNDLE_ID_DEV!
+            : CONFIG.APPLE_BUNDLE_ID!,
+          client_secret: clientSecret,
+          code: user.authorizationCode,
+          grant_type: "authorization_code",
+        }),
+      });
+      const resJson = await result.json();
+      if (resJson.refresh_token) {
+        appleRefreshToken = resJson.refresh_token;
+      }
+    }
     const newAppUser = newEntity(AppUser, {
       username: user.username,
       displayName: user.displayName || user.username,
+      appleRefreshToken,
     });
     const result = await this.appUserRepo.save(newAppUser);
     const token = AuthService.signUserToken(result.id);

@@ -1,4 +1,4 @@
-import { DataSource, Repository } from "typeorm";
+import { DataSource, FindManyOptions, Repository } from "typeorm";
 import Code from "../db/entity/Code";
 import { newEntity } from "../util/helpers";
 
@@ -9,10 +9,49 @@ class CodeService {
   }
 
   checkCodeExist = async (code: string) => {
-    const isExist = !!(await this.codeRepo.findOneBy({
-      code,
-    }));
-    return isExist;
+    const result = await this.codeRepo.findOne({
+      where: { code },
+      relations: {
+        optionList: true,
+      },
+    });
+    return { isExist: !!result, optionListName: result?.optionList.name };
+  };
+
+  getCode = async (code: string) => {
+    const codeInfo = await this.codeRepo.findOneBy({ code });
+    return codeInfo;
+  };
+
+  getCodeDetails = async (code: string) => {
+    const codeDetails = await this.codeRepo.findOne({
+      where: {
+        code,
+      },
+      relations: {
+        owner: true,
+        optionList: {
+          options: true,
+        },
+      },
+    });
+    return codeDetails;
+  };
+
+  getAllCode = async (options?: FindManyOptions<Code>) => {
+    const allCode = await this.codeRepo.find(options);
+    return allCode;
+  };
+
+  getAllCodeDetails = async () => {
+    const allCodeDetails = await this.codeRepo.find({
+      relations: {
+        optionList: {
+          options: true,
+        },
+      },
+    });
+    return allCodeDetails;
   };
 
   createCode = async (
@@ -22,7 +61,7 @@ class CodeService {
   ): Promise<{ id: number; code: string }> => {
     const { nanoid } = await import("nanoid");
     const code = nanoid(12);
-    const isExist = await this.checkCodeExist(code);
+    const { isExist } = await this.checkCodeExist(code);
     if (isExist) {
       console.error("Code already exists. Create code again.");
       if (retried < 5) {

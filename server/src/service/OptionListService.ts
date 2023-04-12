@@ -3,6 +3,7 @@ import OptionList from "../db/entity/OptionList";
 import Option from "../db/entity/Option";
 import AppUser from "../db/entity/AppUser";
 import { newEntity } from "../util/helpers";
+import AppError from "../util/error/AppError";
 
 type CreateOptionListData = {
   name: string;
@@ -11,18 +12,18 @@ type CreateOptionListData = {
 };
 
 type UpdateOptionListData = {
-  id: number;
+  id?: number;
+  code?: string;
   name: string;
   options?: { id?: number; name: string }[];
+  userId: number;
 };
 
 class OptionListService {
   private optionListRepo: Repository<OptionList>;
-  private optionRepo: Repository<Option>;
 
   constructor(dataSource: DataSource) {
     this.optionListRepo = dataSource.getRepository(OptionList);
-    this.optionRepo = dataSource.getRepository(Option);
   }
 
   getAllOptionLists = async () => {
@@ -57,24 +58,57 @@ class OptionListService {
       .map((option) => newEntity(Option, option));
     const newOptionList = newEntity(OptionList, {
       name,
-      // owner,
+      owner,
       options: relatedOptions,
     });
     const result = await this.optionListRepo.save(newOptionList);
     return result;
   };
 
-  updateOptionList = async ({ id, name, options }: UpdateOptionListData) => {
+  updateOptionList = async ({
+    id,
+    code,
+    name,
+    options,
+    userId,
+  }: UpdateOptionListData) => {
+    if (!id && !code) {
+      throw new AppError("Invalid id", 404);
+    }
     const relatedOptions = options
       ?.filter((option) => option.id)
       .map((option) => newEntity(Option, option));
-    const newOptionList = newEntity(OptionList, {
+
+    // https://github.com/typeorm/typeorm/issues/8404
+    // const updatedOptionList = newEntity(OptionList, {
+    //   name,
+    //   options: relatedOptions,
+    // });
+    // const result = await this.optionListRepo.update(
+    //   {
+    //     code: { code },
+    //     owner: {
+    //       id: userId,
+    //     },
+    //   },
+    //   updatedOptionList
+    // );
+
+    const optionListToUpdate = await this.optionListRepo.findOneBy({
       id,
+      code: code ? { code } : undefined,
+      owner: {
+        id: userId,
+      },
+    });
+    if (!optionListToUpdate) {
+      return false;
+    }
+    Object.assign(optionListToUpdate, {
       name,
-      // owner,
       options: relatedOptions,
     });
-    const result = await this.optionListRepo.save(newOptionList);
+    const result = await this.optionListRepo.save(optionListToUpdate);
     return result;
   };
 

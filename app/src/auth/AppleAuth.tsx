@@ -1,11 +1,12 @@
 import useLogin from "@/api/auth/useLogin";
-import { UserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context";
 import * as AppleAuthentication from "expo-apple-authentication";
-import { useContext, useEffect, useState } from "react";
+import * as Application from "expo-application";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 
 const AppleAuth: React.FC = () => {
-  const { updateUser } = useContext(UserContext);
+  const { updateUser } = useUserContext();
   const login = useLogin(updateUser);
   const [show, setShow] = useState(false);
 
@@ -32,13 +33,16 @@ const AppleAuth: React.FC = () => {
         login.mutate({
           type: "apple",
           id_token: credential.identityToken,
+          authorizationCode: credential.authorizationCode,
           displayName: credential.fullName
             ? `${credential.fullName?.givenName} ${credential.fullName?.familyName}`
             : undefined,
+          isDev:
+            Application.applicationId === "host.exp.exponent" ||
+            !!Application.applicationId?.includes("dev"),
         });
       }
     } catch (err) {
-      console.log(err);
       if (err.code === "ERR_CANCELED") {
         // handle that the user canceled the sign-in flow
       } else {

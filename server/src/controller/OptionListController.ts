@@ -14,7 +14,7 @@ class OptionListController {
   };
 
   createOptionList: RequestHandler = async (req, res, next) => {
-    const userId = req.user!
+    const userId = req.user!;
     const { name, options } = req.body;
     validateReq("name", name, "string");
     validateReq("options", options, "array");
@@ -31,11 +31,11 @@ class OptionListController {
   };
 
   updateOptionList: RequestHandler = async (req, res, next) => {
+    const userId = req.user!;
     const { id } = req.params;
     const { name, options } = req.body;
     const parsedId = Number.parseInt(id);
     validateReq("id", parsedId, "number");
-    // TODO: check owner
     if (options) {
       validateReq("options", options, "array");
       const { optionsWithId, optionsToInsert } = preprocessOptions(options);
@@ -45,13 +45,15 @@ class OptionListController {
       const result = await this.optionListService.updateOptionList({
         id: parsedId,
         name,
+        userId,
         options: [...optionsWithId, ...createdOptionsIds],
       });
-      return res.json({ data: result });
+      return res.json(result);
     }
     const result = await this.optionListService.updateOptionList({
       id: parsedId,
       name,
+      userId,
     });
     return res.json(result);
   };

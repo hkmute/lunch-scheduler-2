@@ -12,7 +12,11 @@ const theme = createTheme({
     }),
     Button: (props, theme) => ({
       buttonStyle: {
-        borderRadius: 16,
+        borderRadius: props.size === "sm" ? 12 : 16,
+        borderWidth: props.type === "outline" ? 1 : 0,
+      },
+      titleStyle: {
+        fontSize: props.size === "sm" ? 14 : 18,
       },
     }),
     Input: (props, theme) => ({
@@ -29,7 +33,7 @@ const theme = createTheme({
       labelStyle: {
         color: theme.colors.grey1,
         marginBottom: 4,
-        marginLeft: 4,
+        marginLeft: 6,
       },
     }),
   },

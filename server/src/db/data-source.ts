@@ -12,11 +12,12 @@ const initAppDataSource = (config: typeof CONFIG) =>
     password: config.DB_PASSWORD,
     database: config.DB_NAME,
     // dropSchema: !isProduction,
-    synchronize: !isProduction,
+    // synchronize: !isProduction,
     logging: isProduction ? ["error", "warn"] : true,
     entities: [path.join(__dirname, "entity/*")],
     subscribers: [],
-    migrations: [],
+    migrations: [path.join(__dirname, "migrations/*")],
+    migrationsRun: true,
     namingStrategy: new SnakeNamingStrategy(),
   });
 

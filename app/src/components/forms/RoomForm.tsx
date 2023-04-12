@@ -1,37 +1,35 @@
-import TextInputControl from "@/components/formControls/TextInputControl";
-import LoginButtons from "@/components/LoginButtons";
-import { UserContext } from "@/context/UserContext";
-import fonts from "@/styles/fonts";
-import { useContext } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { Button, Text, Icon } from "@rneui/themed";
+import { CreateCodeData } from "@/api/room/useCreateCode";
+import { EditCodeData } from "@/api/room/useEditCode";
+import { useCodeContext } from "@/context";
 import appColor from "@/styles/colors";
-import useCreateCode from "@/api/room/useCreateCode";
-import { RootStackParamList } from "@/navigation/types";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import fonts from "@/styles/fonts";
+import { Button, Text, Icon } from "@rneui/themed";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { useForm, useFieldArray } from "react-hook-form";
+import { View, StyleSheet } from "react-native";
+import TextInputControl from "../formControls/TextInputControl";
 
-type Props = NativeStackScreenProps<RootStackParamList, "CreateRoom">;
+type Props = {
+  mutate:
+    | UseMutateFunction<any, unknown, CreateCodeData>
+    | UseMutateFunction<any, unknown, EditCodeData>;
+  isLoading: boolean;
+  defaultValues?: {
+    name: string;
+    options: { id?: number; name: string }[];
+  };
+};
 
-const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
-  const user = useContext(UserContext);
-
-  const { mutate, isLoading } = useCreateCode({
-    onSuccess: (res) => {
-      const code = res.data?.code;
-      if (code) {
-        navigation.navigate("Room", { screen: "Today", params: { code } });
-      }
-    },
-  });
-
+const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
+  const { code } = useCodeContext();
   const {
     control,
     handleSubmit,
     getValues,
-    formState: { errors },
+    formState: { errors, dirtyFields, ...rest },
+    reset,
   } = useForm({
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: "",
       options: [{ name: "" }],
     },
@@ -43,7 +41,7 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
     rules: {
       validate: {
         minItems: (items) => {
-          if (items.filter((item) => !!item.name).length < 1) {
+          if (items.filter((item) => !!item.name.trim()).length < 1) {
             return "必須填寫";
           }
         },
@@ -62,28 +60,35 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleSubmitPress = handleSubmit(({ name, options }) => {
-    mutate({ name, options });
+    const optionsToSubmit = options.reduce((acc, option, i) => {
+      const optionName = option.name.trim();
+      if (!optionName) {
+        return acc;
+      }
+      if (!!dirtyFields.options?.[i]?.name) {
+        return [...acc, { name: optionName }];
+      }
+      return [...acc, option];
+    }, [] as typeof options);
+    mutate({ code, name, options: optionsToSubmit });
   });
 
-  if (!user.id) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loginText}>請登入或註冊</Text>
-        <LoginButtons />
-      </View>
-    );
-  }
-
   return (
-    <ScrollView style={styles.container}>
+    <View>
       <TextInputControl
         name="name"
         label="團隊名稱"
         control={control}
-        rules={{ required: "必須填寫" }}
+        rules={{
+          validate: (value) => {
+            if (!value.trim()) {
+              return "必須填寫";
+            }
+          },
+        }}
       />
       <View>
-        <Text style={fonts.label}>選項</Text>
+        <Text style={fonts.label}>餐廳選項</Text>
         {fields.map((field, index) => (
           <View key={field.id} style={styles.optionRow}>
             <View style={styles.optionField}>
@@ -116,7 +121,7 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
         {optionsLength < 20 && (
           <Button
             color="secondary"
-            style={styles.addButton}
+            containerStyle={styles.addButton}
             icon={
               <Icon
                 type="material-community"
@@ -129,23 +134,16 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
         )}
       </View>
       <Button
-        style={styles.submitButton}
+        containerStyle={styles.submitButton}
         title="確認"
         onPress={handleSubmitPress}
         loading={isLoading}
       />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  loginText: {
-    ...fonts.title,
-  },
   optionRow: {
     flexDirection: "row",
     marginRight: 8,
@@ -168,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateRoomScreen;
+export default RoomForm;

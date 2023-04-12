@@ -13,6 +13,11 @@ class AppUser extends DefaultColumns {
   })
   email: string;
 
+  @Column({
+    nullable: true,
+  })
+  appleRefreshToken: string;
+
   @Column()
   displayName: string;
 

@@ -2,7 +2,8 @@ import { RequestHandler } from "express";
 import CodeService from "../service/CodeService";
 import OptionListService from "../service/OptionListService";
 import OptionService from "../service/OptionService";
-import { preprocessOptions, validateReq } from "../util/helpers";
+import AppError from "../util/error/AppError";
+import { preprocessOptions, sanitizeOwner, validateReq } from "../util/helpers";
 
 class CodeController {
   constructor(
@@ -13,8 +14,19 @@ class CodeController {
 
   checkCodeExist: RequestHandler = async (req, res, next) => {
     const { code } = req.params;
-    const isExist = await this.codeService.checkCodeExist(code);
-    return res.json({ isExist });
+    const result = await this.codeService.checkCodeExist(code);
+    return res.json(result);
+  };
+
+  getCodeDetails: RequestHandler = async (req, res) => {
+    const userId = req.user!;
+    const { code } = req.params;
+    const codeDetails = await this.codeService.getCodeDetails(code);
+    if (!codeDetails) {
+      throw new AppError("Code does not exist", 404);
+    }
+
+    return res.json(sanitizeOwner(codeDetails, userId));
   };
 
   createCode: RequestHandler = async (req, res) => {
@@ -33,6 +45,26 @@ class CodeController {
     });
     const { code } = await this.codeService.createCode(result.id, userId);
     return res.json({ code });
+  };
+
+  editCode: RequestHandler = async (req, res) => {
+    const userId = req.user!;
+    const { code } = req.params;
+    const { name, options } = req.body;
+    validateReq("code", code, "string");
+    validateReq("name", name, "string");
+    validateReq("options", options, "array");
+    const { optionsWithId, optionsToInsert } = preprocessOptions(options);
+    const createdOptionsIds = await this.optionService.createOptions(
+      optionsToInsert
+    );
+    await this.optionListService.updateOptionList({
+      code,
+      name,
+      options: [...optionsWithId, ...createdOptionsIds],
+      userId,
+    });
+    return res.json();
   };
 }
 

@@ -7,7 +7,6 @@ const retrieveUserId: RequestHandler = (req, res, next) => {
       const userId = AuthService.verifyUserToken(
         req.headers.authorization.split("Bearer ")[1]
       );
-      console.log(req.headers.authorization.split("Bearer ")[1], userId);
       req.user = userId;
     } catch (err) {
       console.error(

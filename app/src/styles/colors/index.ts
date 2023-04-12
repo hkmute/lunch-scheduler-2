@@ -1,5 +1,5 @@
 import { CreateThemeOptions } from "@rneui/themed";
-import { common, grey, blueGrey } from "./palette";
+import { common, grey, blueGrey, red } from "./palette";
 
 const primaryColor = blueGrey;
 const secondaryColor = blueGrey;
@@ -19,7 +19,7 @@ const appColor: NonNullable<CreateThemeOptions["lightColors"]> = {
   greyOutline: grey[100],
   searchBg: grey[200],
   // success:
-  // error:
+  error: red[900],
   // warning:
   divider: grey[100],
 };

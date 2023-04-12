@@ -1,28 +1,17 @@
 import { RequestHandler } from "express";
-import AuthService from "../service/AuthService";
-import CodeService from "../service/CodeService";
 import HistoryService from "../service/HistoryService";
 import OptionService from "../service/OptionService";
-import UserService from "../service/UserService";
+import TodayOptionService from "../service/TodayOptionService";
+import VoteService from "../service/VoteService";
+import { getPaginationParams, validateReq } from "../util/helpers";
 
 class MainController {
   constructor(
-    private userService: UserService,
     private optionService: OptionService,
-    private historyService: HistoryService
+    private todayOptionService: TodayOptionService,
+    private historyService: HistoryService,
+    private voteService: VoteService
   ) {}
-
-  getMe: RequestHandler = async (req, res, next) => {
-    const userId = req.user;
-    if (userId) {
-      const me = await this.userService.getUser(userId);
-      if (me) {
-        const token = AuthService.signUserToken(userId);
-        return res.json({ ...me, token });
-      }
-    }
-    return res.json();
-  };
 
   getOptions: RequestHandler = async (req, res, next) => {
     const options = await this.optionService.getOptions();
@@ -35,9 +24,27 @@ class MainController {
     if (todayResult) {
       return res.json(todayResult);
     }
-
-    const todayOptions = await this.optionService.getTodayOptions(code);
+    
+    const todayOptions = await this.todayOptionService.getTodayOptions(code);
     return res.json(todayOptions);
+  };
+
+  getHistoryByCode: RequestHandler = async (req, res) => {
+    const { code } = req.params;
+    const history = await this.historyService.getCodeHistory(
+      code,
+      getPaginationParams(req.query)
+    );
+    return res.json(history);
+  };
+
+  vote: RequestHandler = async (req, res) => {
+    const { code, todayOptionId, voter } = req.body;
+    validateReq("code", code, "string");
+    validateReq("todayOptionId", todayOptionId, "number");
+    validateReq("voter", voter, "string");
+    this.voteService.vote(code, todayOptionId, voter);
+    return res.json();
   };
 }
 

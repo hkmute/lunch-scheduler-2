@@ -1,24 +1,29 @@
 import express from "express";
-import { AppDataSource } from "./db/data-source";
-import initializeDB from "./db/initializeDB";
+import path from "path";
 import rootRoutes from "./routes";
 import errorHandler from "./util/error/errorHandler";
 import middleware from "./middleware";
 import CONFIG from "./config";
+import init from "./init";
 
 const app = express();
 const PORT = CONFIG.PORT;
 
-initializeDB(AppDataSource);
+init();
 
 app.use(...middleware);
+app.use("/static", express.static(path.join(__dirname, "static")));
 app.use(rootRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
+  res.send("Welcome");
 });
 
 app.use(errorHandler);
+
+app.use((req, res) => {
+  res.send("Hello");
+});
 
 app.listen(PORT, () => {
   console.log(`Listening at port ${PORT}`);
