@@ -29,7 +29,7 @@ const TodayScreen: React.FC<Props> = () => {
   if (!data || (Array.isArray(data) && data.length === 0)) {
     return (
       <View style={styles.container}>
-        <Text style={styles.bodyText}>準備中。。。</Text>
+        <Text style={styles.bodyText}>投票時段將於早上8:00開始</Text>
       </View>
     );
   }

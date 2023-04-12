@@ -6,7 +6,7 @@ module.exports = () => {
       name: isDev ? "EAT MUD DEV" : "食乜",
       slug: "lunch-scheduler",
       scheme: "eat-mud",
-      version: "1.0.0",
+      version: process.env.npm_package_version,
       orientation: "portrait",
       icon: "./assets/icon.png",
       userInterfaceStyle: "light",

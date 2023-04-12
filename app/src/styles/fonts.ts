@@ -10,6 +10,10 @@ const fonts = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
+  light: {
+    fontSize: 16,
+    fontWeight: "400",
+  },
   large: {
     fontSize: 24,
     fontWeight: "500",

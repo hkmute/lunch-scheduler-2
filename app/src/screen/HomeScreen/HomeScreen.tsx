@@ -14,6 +14,7 @@ import updateRoomHistory from "@/utils/updateRoomHistory";
 import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
 import VersionText from "@/components/viewComponents/VersionText";
+import GuideButton from "@/components/GuideButton";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -81,6 +82,9 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView
       style={[styles.wrapper, { backgroundColor: theme.colors.primary }]}
     >
+      <View style={styles.guideButton}>
+        <GuideButton />
+      </View>
       <Image source={appIcon} style={styles.icon} />
       <TextInput
         ref={inputRef}
@@ -153,6 +157,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  guideButton: {
+    alignSelf: "center",
   },
 });
 

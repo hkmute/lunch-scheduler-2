@@ -41,7 +41,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
     rules: {
       validate: {
         minItems: (items) => {
-          if (items.filter((item) => !!item.name).length < 1) {
+          if (items.filter((item) => !!item.name.trim()).length < 1) {
             return "必須填寫";
           }
         },
@@ -60,12 +60,16 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
   };
 
   const handleSubmitPress = handleSubmit(({ name, options }) => {
-    const optionsToSubmit = options.map((option, i) => {
-      if (!!dirtyFields.options?.[i]?.name) {
-        return { name: option.name };
+    const optionsToSubmit = options.reduce((acc, option, i) => {
+      const optionName = option.name.trim();
+      if (!optionName) {
+        return acc;
       }
-      return option;
-    });
+      if (!!dirtyFields.options?.[i]?.name) {
+        return [...acc, { name: optionName }];
+      }
+      return [...acc, option];
+    }, [] as typeof options);
     mutate({ code, name, options: optionsToSubmit });
   });
 
@@ -75,7 +79,13 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
         name="name"
         label="團隊名稱"
         control={control}
-        rules={{ required: "必須填寫" }}
+        rules={{
+          validate: (value) => {
+            if (!value.trim()) {
+              return "必須填寫";
+            }
+          },
+        }}
       />
       <View>
         <Text style={fonts.label}>餐廳選項</Text>

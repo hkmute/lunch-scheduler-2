@@ -8,6 +8,7 @@ import TodayScreen from "../screen/room/TodayScreen";
 import { RoomTabParamList, RootStackParamList } from "./types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import GuideButton from "@/components/GuideButton";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Room">;
 
@@ -31,6 +32,7 @@ const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
           backgroundColor: theme.colors.primary,
         },
         headerTintColor: theme.colors.white,
+        headerLeft: () => <GuideButton />,
         headerRight: () => <Button title="退出團隊" onPress={handleBack} />,
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.grey3,

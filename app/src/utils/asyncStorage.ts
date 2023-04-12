@@ -17,6 +17,14 @@ export const asyncGetDeviceId = async () => {
   return await SecureStore.getItemAsync("deviceId");
 };
 
+export const asyncSetGuideId = async (guideId: string) => {
+  return await AsyncStorage.setItem("guide", guideId);
+};
+
+export const asyncGetGuideId = async () => {
+  return await AsyncStorage.getItem("guide");
+};
+
 export const asyncSetRoomHistory = async (
   roomHistory: { code: string; optionListName: string }[]
 ) => {
