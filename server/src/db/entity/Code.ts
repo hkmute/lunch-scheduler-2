@@ -13,6 +13,12 @@ class Code extends DefaultColumns {
   @Column()
   code: string;
 
+  @Column({
+    default: true,
+    nullable: true,
+  })
+  allowGuestEdit: boolean;
+
   @ManyToOne(() => AppUser, (user) => user.codes)
   owner: AppUser;
 

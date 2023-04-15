@@ -28,6 +28,8 @@ const SettingsScreen: React.FC<Props> = () => {
     refetch();
   }, [user]);
 
+  const showEditMode = data && (data.isOwner || data.allowGuestEdit);
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -45,12 +47,17 @@ const SettingsScreen: React.FC<Props> = () => {
             <UserSettings />
           </View>
         )}
-        {data && data.isOwner && (
-          <OwnerOptionList code={data.code} optionList={data.optionList} />
-        )}
-        {data && !data.isOwner && (
-          <GuestOptionList code={data.code} optionList={data.optionList} />
-        )}
+        {data &&
+          (showEditMode ? (
+            <OwnerOptionList
+              code={data.code}
+              optionList={data.optionList}
+              isOwner={data.isOwner}
+              allowGuestEdit={data.allowGuestEdit}
+            />
+          ) : (
+            <GuestOptionList code={data.code} optionList={data.optionList} />
+          ))}
         <VersionText />
       </ScrollView>
     </KeyboardAvoidingView>

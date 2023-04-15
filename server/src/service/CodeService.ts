@@ -83,6 +83,22 @@ class CodeService {
       .execute();
     return { id: result.identifiers[0].id, code };
   };
+
+  updateCode = async (
+    userId: number,
+    code: string,
+    { allowGuestEdit }: Partial<Code>
+  ) => {
+    const codeEntity = newEntity(Code, { code, allowGuestEdit });
+    const result = await this.codeRepo.update(
+      {
+        owner: { id: userId },
+        code,
+      },
+      codeEntity
+    );
+    return result.affected;
+  };
 }
 
 export default CodeService;

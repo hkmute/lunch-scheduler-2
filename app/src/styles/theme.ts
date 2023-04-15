@@ -36,6 +36,22 @@ const theme = createTheme({
         marginLeft: 6,
       },
     }),
+    CheckBox: (props, theme) => ({
+      iconType: "material",
+      checkedIcon: "check-box",
+      uncheckedIcon: "check-box-outline-blank",
+      checkedColor: theme.colors.primary,
+      containerStyle: {
+        backgroundColor: "transparent",
+        borderWidth: 0,
+        padding: 0,
+        margin: 0,
+      },
+      textStyle: {
+        color: theme.colors.grey1,
+        fontSize: 16,
+      },
+    }),
   },
 });
 

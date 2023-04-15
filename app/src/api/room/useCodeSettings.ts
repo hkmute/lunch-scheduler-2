@@ -11,6 +11,7 @@ type CodeSettings = {
     name: string;
     options: { id: number; name: string }[];
   };
+  allowGuestEdit?: boolean;
 };
 
 type CodeSettingsVar = {

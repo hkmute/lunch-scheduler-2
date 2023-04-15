@@ -4,6 +4,7 @@ import apiClient from "../apiClient";
 export type CreateCodeData = {
   name: string;
   options: { id?: number; name: string }[];
+  allowGuestEdit: boolean;
 };
 
 const useCreateCode = createMutation<

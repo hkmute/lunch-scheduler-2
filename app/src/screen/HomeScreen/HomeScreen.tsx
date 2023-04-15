@@ -15,6 +15,7 @@ import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
 import VersionText from "@/components/viewComponents/VersionText";
 import GuideButton from "@/components/GuideButton";
+import { API_HOST } from "@env";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 

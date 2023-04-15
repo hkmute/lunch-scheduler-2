@@ -26,6 +26,7 @@ const TextInputControl: React.FC<Props> = ({
     <Controller
       control={control}
       rules={rules}
+      name={name}
       render={({ field: { onChange, ...restField } }) => (
         <TextInput
           {...rest}
@@ -34,7 +35,6 @@ const TextInputControl: React.FC<Props> = ({
           errorMessage={errorMessage ?? errors[name]?.message}
         />
       )}
-      name={name}
     />
   );
 };

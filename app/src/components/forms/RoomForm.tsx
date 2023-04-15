@@ -8,6 +8,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
 import { View, StyleSheet } from "react-native";
 import TextInputControl from "../formControls/TextInputControl";
+import CheckboxControl from "../formControls/CheckboxControl";
 
 type Props = {
   mutate:
@@ -17,10 +18,17 @@ type Props = {
   defaultValues?: {
     name: string;
     options: { id?: number; name: string }[];
+    restrictGuestEdit?: boolean;
   };
+  isOwner: boolean;
 };
 
-const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
+const RoomForm: React.FC<Props> = ({
+  mutate,
+  isLoading,
+  defaultValues,
+  isOwner,
+}) => {
   const { code } = useCodeContext();
   const {
     control,
@@ -59,19 +67,26 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
     remove(index);
   };
 
-  const handleSubmitPress = handleSubmit(({ name, options }) => {
-    const optionsToSubmit = options.reduce((acc, option, i) => {
-      const optionName = option.name.trim();
-      if (!optionName) {
-        return acc;
-      }
-      if (!!dirtyFields.options?.[i]?.name) {
-        return [...acc, { name: optionName }];
-      }
-      return [...acc, option];
-    }, [] as typeof options);
-    mutate({ code, name, options: optionsToSubmit });
-  });
+  const handleSubmitPress = handleSubmit(
+    ({ name, options, restrictGuestEdit }) => {
+      const optionsToSubmit = options.reduce((acc, option, i) => {
+        const optionName = option.name.trim();
+        if (!optionName) {
+          return acc;
+        }
+        if (!!dirtyFields.options?.[i]?.name) {
+          return [...acc, { name: optionName }];
+        }
+        return [...acc, option];
+      }, [] as typeof options);
+      mutate({
+        code,
+        name,
+        options: optionsToSubmit,
+        allowGuestEdit: !restrictGuestEdit,
+      });
+    }
+  );
 
   return (
     <View>
@@ -87,6 +102,14 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
           },
         }}
       />
+      {isOwner && (
+        <CheckboxControl
+          name="restrictGuestEdit"
+          label="只限擁有者修改"
+          control={control}
+          containerStyle={styles.checkbox}
+        />
+      )}
       <View>
         <Text style={fonts.label}>餐廳選項</Text>
         {fields.map((field, index) => (
@@ -95,6 +118,7 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
               <TextInputControl
                 name={`options.${index}.name`}
                 control={control}
+                placeholder="輸入餐廳名稱"
                 renderErrorMessage={index === fields.length - 1}
                 errorMessage={
                   index === fields.length - 1
@@ -144,6 +168,9 @@ const RoomForm: React.FC<Props> = ({ mutate, isLoading, defaultValues }) => {
 };
 
 const styles = StyleSheet.create({
+  checkbox: {
+    marginBottom: 16,
+  },
   optionRow: {
     flexDirection: "row",
     marginRight: 8,

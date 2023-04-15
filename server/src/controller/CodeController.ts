@@ -50,10 +50,16 @@ class CodeController {
   editCode: RequestHandler = async (req, res) => {
     const userId = req.user!;
     const { code } = req.params;
-    const { name, options } = req.body;
+    const { name, options, allowGuestEdit } = req.body;
     validateReq("code", code, "string");
     validateReq("name", name, "string");
     validateReq("options", options, "array");
+    if (allowGuestEdit !== undefined) {
+      await this.codeService.updateCode(userId, code, {
+        allowGuestEdit,
+      });
+    }
+    const codeInfo = await this.codeService.getCode(code);
     const { optionsWithId, optionsToInsert } = preprocessOptions(options);
     const createdOptionsIds = await this.optionService.createOptions(
       optionsToInsert
@@ -63,6 +69,7 @@ class CodeController {
       name,
       options: [...optionsWithId, ...createdOptionsIds],
       userId,
+      allowGuestEdit: codeInfo?.allowGuestEdit,
     });
     return res.json();
   };

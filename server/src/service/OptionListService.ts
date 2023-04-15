@@ -17,6 +17,7 @@ type UpdateOptionListData = {
   name: string;
   options?: { id?: number; name: string }[];
   userId: number;
+  allowGuestEdit?: boolean;
 };
 
 class OptionListService {
@@ -71,6 +72,7 @@ class OptionListService {
     name,
     options,
     userId,
+    allowGuestEdit,
   }: UpdateOptionListData) => {
     if (!id && !code) {
       throw new AppError("Invalid id", 404);
@@ -97,9 +99,11 @@ class OptionListService {
     const optionListToUpdate = await this.optionListRepo.findOneBy({
       id,
       code: code ? { code } : undefined,
-      owner: {
-        id: userId,
-      },
+      owner: allowGuestEdit
+        ? undefined
+        : {
+            id: userId,
+          },
     });
     if (!optionListToUpdate) {
       return false;

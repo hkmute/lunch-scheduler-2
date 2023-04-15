@@ -12,9 +12,16 @@ type Props = {
     name: string;
     options: { id: number; name: string }[];
   };
+  isOwner: boolean;
+  allowGuestEdit?: boolean;
 };
 
-const OwnerOptionList: React.FC<Props> = ({ code, optionList }) => {
+const OwnerOptionList: React.FC<Props> = ({
+  code,
+  optionList,
+  isOwner,
+  allowGuestEdit,
+}) => {
   const { mutate, isLoading } = useEditCode({
     onSuccess: async (data, variables) => {
       showToast("修改成功");
@@ -25,13 +32,19 @@ const OwnerOptionList: React.FC<Props> = ({ code, optionList }) => {
     },
   });
 
+  const defaultValues = {
+    ...optionList,
+    restrictGuestEdit: !allowGuestEdit,
+  };
+
   return (
     <View>
       <CodeRow code={code} />
       <RoomForm
         mutate={mutate}
         isLoading={isLoading}
-        defaultValues={optionList}
+        defaultValues={defaultValues}
+        isOwner={isOwner}
       />
     </View>
   );
