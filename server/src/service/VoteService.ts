@@ -1,5 +1,5 @@
 import schedule from "node-schedule";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, LessThanOrEqual, Repository } from "typeorm";
 import Vote from "../db/entity/Vote";
 import CodeService from "./CodeService";
 import HistoryService from "./HistoryService";
@@ -76,16 +76,17 @@ class VoteService {
   };
 
   scheduleCreateVoteCandidates = async () => {
-    schedule.scheduleJob("00 * * * *", async () => {
-      const allCode = await this.codeService.getAllCode(); //TODO: hour config for code
-      allCode.forEach(({ code }) => {
-        const defaultCreateHour = getHours(new Date().setUTCHours(8 - 8));
-        if (getHours(new Date()) === defaultCreateHour) {
-          this.createVoteCandidates(code);
-        }
+    const scheduleMinute = 1;
+    schedule.scheduleJob(`${scheduleMinute} * * * *`, async () => {
+      const allCodeToDo =
+        await this.codeService.getAllCodeToCreateVoteCandidates();
+      allCodeToDo.forEach(({ code }) => {
+        this.createVoteCandidates(code);
       });
     });
-    console.log("Scheduled to create vote candidates every hour at 0 mins");
+    console.log(
+      `Scheduled to create vote candidates every hour at ${scheduleMinute} mins`
+    );
   };
 
   startLottery = async (code: string) => {
@@ -123,16 +124,21 @@ class VoteService {
   };
 
   scheduleLottery = async () => {
-    schedule.scheduleJob("00 * * * *", async () => {
-      const allCode = await this.codeService.getAllCode(); //TODO: hour config for code
-      allCode.forEach(({ code }) => {
-        const defaultCreateHour = getHours(new Date().setUTCHours(11 - 8));
-        if (getHours(new Date()) === defaultCreateHour) {
-          this.startLottery(code);
-        }
+    const scheduleMinute = 30;
+    schedule.scheduleJob(`${scheduleMinute} * * * *`, async () => {
+      const allCodeForLottery = await this.codeService.getAllCode({
+        where: {
+          lotteryHour: LessThanOrEqual(getHours(new Date())),
+        },
+      });
+      // TODO: create lottery result in an array and only insert to db once
+      allCodeForLottery.forEach(({ code }) => {
+        this.startLottery(code);
       });
     });
-    console.log("Scheduled to create lottery result every hour at 30 mins");
+    console.log(
+      `Scheduled to create lottery result every hour at ${scheduleMinute} mins`
+    );
   };
 }
 

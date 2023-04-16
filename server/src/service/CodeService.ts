@@ -1,6 +1,13 @@
-import { DataSource, FindManyOptions, Repository } from "typeorm";
+import {
+  DataSource,
+  FindManyOptions,
+  LessThanOrEqual,
+  Repository,
+} from "typeorm";
 import Code from "../db/entity/Code";
 import { newEntity } from "../util/helpers";
+import TodayOption from "../db/entity/TodayOption";
+import { getHours, startOfDay } from "date-fns";
 
 class CodeService {
   private codeRepo: Repository<Code>;
@@ -52,6 +59,23 @@ class CodeService {
       },
     });
     return allCodeDetails;
+  };
+
+  getAllCodeToCreateVoteCandidates = async () => {
+    const result = await this.codeRepo
+      .createQueryBuilder("code")
+      .leftJoinAndSelect(
+        TodayOption,
+        "today_option",
+        "code.id = today_option.code_id AND today_option.date = :today",
+        { today: startOfDay(new Date()) }
+      )
+      .where("today_option.id IS NULL")
+      .andWhere({
+        voteHour: LessThanOrEqual(getHours(new Date())),
+      })
+      .getMany();
+    return result;
   };
 
   createCode = async (

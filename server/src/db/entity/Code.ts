@@ -19,6 +19,18 @@ class Code extends DefaultColumns {
   })
   allowGuestEdit: boolean;
 
+  @Column({
+    default: 8,
+    nullable: true,
+  })
+  voteHour: number;
+
+  @Column({
+    default: 11,
+    nullable: true,
+  })
+  lotteryHour: number;
+
   @ManyToOne(() => AppUser, (user) => user.codes)
   owner: AppUser;
 
