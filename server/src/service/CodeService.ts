@@ -99,6 +99,7 @@ class CodeService {
   createCode = async (
     optionListId: number,
     ownerId: number,
+    { allowGuestEdit }: Partial<Code>,
     retried: number = 0
   ): Promise<{ id: number; code: string }> => {
     const { nanoid } = await import("nanoid");
@@ -107,7 +108,12 @@ class CodeService {
     if (isExist) {
       console.error("Code already exists. Create code again.");
       if (retried < 5) {
-        return this.createCode(optionListId, ownerId, retried + 1);
+        return this.createCode(
+          optionListId,
+          ownerId,
+          { allowGuestEdit },
+          retried + 1
+        );
       } else {
         console.error("Code already exists. Create code again.");
         throw new Error();

@@ -31,7 +31,7 @@ class CodeController {
 
   createCode: RequestHandler = async (req, res) => {
     const userId = req.user!;
-    const { name, options } = req.body;
+    const { name, options, allowGuestEdit } = req.body;
     validateReq("name", name, "string");
     validateReq("options", options, "array");
     const { optionsWithId, optionsToInsert } = preprocessOptions(options);
@@ -43,7 +43,9 @@ class CodeController {
       ownerId: userId,
       options: [...optionsWithId, ...createdOptionsIds],
     });
-    const { code } = await this.codeService.createCode(result.id, userId);
+    const { code } = await this.codeService.createCode(result.id, userId, {
+      allowGuestEdit,
+    });
     return res.json({ code });
   };
 
