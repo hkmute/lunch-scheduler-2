@@ -99,7 +99,7 @@ class CodeService {
   createCode = async (
     optionListId: number,
     ownerId: number,
-    { allowGuestEdit }: Partial<Code>,
+    codeOptions: Partial<Code>,
     retried: number = 0
   ): Promise<{ id: number; code: string }> => {
     const { nanoid } = await import("nanoid");
@@ -108,12 +108,7 @@ class CodeService {
     if (isExist) {
       console.error("Code already exists. Create code again.");
       if (retried < 5) {
-        return this.createCode(
-          optionListId,
-          ownerId,
-          { allowGuestEdit },
-          retried + 1
-        );
+        return this.createCode(optionListId, ownerId, codeOptions, retried + 1);
       } else {
         console.error("Code already exists. Create code again.");
         throw new Error();
@@ -123,6 +118,7 @@ class CodeService {
       owner: ownerId,
       optionList: optionListId,
       code,
+      ...codeOptions,
     });
     const result = await this.codeRepo
       .createQueryBuilder()
@@ -135,9 +131,9 @@ class CodeService {
   updateCode = async (
     userId: number,
     code: string,
-    { allowGuestEdit }: Partial<Code>
+    codeOptions: Partial<Code>
   ) => {
-    const codeEntity = newEntity(Code, { code, allowGuestEdit });
+    const codeEntity = newEntity(Code, { code, ...codeOptions });
     const result = await this.codeRepo.update(
       {
         owner: { id: userId },
