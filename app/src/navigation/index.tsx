@@ -4,6 +4,7 @@ import CreateRoomScreen from "../screen/CreateRoomScreen";
 import HomeScreen from "../screen/HomeScreen";
 import RoomTabNavigator from "./RoomTabNavigator";
 import { RootStackParamList } from "./types";
+import MyRoomsScreen from "@/screen/MyRoomsScreen";
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -32,6 +33,11 @@ const RootStackNavigator = () => {
         name="CreateRoom"
         component={CreateRoomScreen}
         options={{ title: "建立團隊" }}
+      />
+      <RootStack.Screen
+        name="MyRooms"
+        component={MyRoomsScreen}
+        options={{ title: "我的團隊" }}
       />
       <RootStack.Screen
         name="Room"

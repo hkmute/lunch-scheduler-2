@@ -1,7 +1,6 @@
 import { createQuery } from "react-query-kit";
 import apiClient from "../apiClient";
 import * as SecureStore from "expo-secure-store";
-import { AppErrorResponse, AppSuccessResponse } from "@/types";
 import { User } from "@/context/UserContext";
 
 interface MeResponse {

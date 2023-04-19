@@ -120,6 +120,7 @@ const RoomForm: React.FC<Props> = ({
             }
           },
         }}
+        maxLength={30}
       />
       {isOwner && (
         <CheckboxControl
@@ -176,6 +177,7 @@ const RoomForm: React.FC<Props> = ({
                 name={`options.${index}.name`}
                 control={control}
                 placeholder="輸入餐廳名稱"
+                maxLength={30}
                 renderErrorMessage={index === fields.length - 1}
                 errorMessage={
                   index === fields.length - 1

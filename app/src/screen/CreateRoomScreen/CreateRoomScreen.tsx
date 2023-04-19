@@ -1,19 +1,16 @@
-import LoginButtons from "@/components/LoginButtons";
-import fonts from "@/styles/fonts";
 import {
-  View,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Text } from "@rneui/themed";
 import useCreateCode from "@/api/room/useCreateCode";
 import { RootStackParamList } from "@/navigation/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCodeContext, useUserContext } from "@/context";
 import RoomForm from "@/components/forms/RoomForm";
 import updateRoomHistory from "@/utils/updateRoomHistory";
+import LoginOrRegister from "@/components/LoginOrRegister";
 
 type Props = NativeStackScreenProps<RootStackParamList, "CreateRoom">;
 
@@ -35,12 +32,7 @@ const CreateRoomScreen: React.FC<Props> = ({ navigation }) => {
   });
 
   if (!user.id) {
-    return (
-      <View style={[styles.container, styles.scrollContainer]}>
-        <Text style={styles.loginText}>請登入或註冊</Text>
-        <LoginButtons />
-      </View>
-    );
+    return <LoginOrRegister />;
   }
 
   return (
@@ -62,10 +54,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
-  },
-  loginText: {
-    ...fonts.title,
-    textAlign: "center",
   },
 });
 

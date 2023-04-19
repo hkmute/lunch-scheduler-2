@@ -11,9 +11,11 @@ import errorCatcher from "../util/error/errorCatcher";
 
 const router = express.Router();
 
+router.post("/login", errorCatcher(authController.login));
 router.get("/me", guard, errorCatcher(userController.getMe));
 router.delete("/me", guard, errorCatcher(userController.deleteMe));
-router.post("/login", errorCatcher(authController.login));
+
+router.get("/me/code", guard, errorCatcher(userController.getMyCode));
 
 router.get("/code/:code", errorCatcher(codeController.getCodeDetails));
 router.post("/code", errorCatcher(codeController.createCode));

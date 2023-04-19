@@ -14,6 +14,20 @@ class UserService {
     return user;
   };
 
+  getUserCode = async (id: number) => {
+    const user = await this.userRepo.findOne({
+      relations: {
+        codes: {
+          optionList: true,
+        },
+      },
+      where: {
+        id,
+      },
+    });
+    return user?.codes ?? [];
+  };
+
   deleteUser = async (id: number, isDev: boolean) => {
     const user = await this.userRepo.findOneBy({ id });
     if (user) {

@@ -15,7 +15,6 @@ import RoomHistoryItem from "./components/RoomHistoryItem";
 import appIcon from "assets/icon.png";
 import VersionText from "@/components/viewComponents/VersionText";
 import GuideButton from "@/components/GuideButton";
-import { API_HOST } from "@env";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -78,49 +77,60 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   );
 
   const handleNavigateToCreate = () => navigation.navigate("CreateRoom");
+  const handleNavigateToMyRooms = () => navigation.navigate("MyRooms");
 
   return (
     <SafeAreaView
       style={[styles.wrapper, { backgroundColor: theme.colors.primary }]}
     >
-      <View style={styles.guideButton}>
-        <GuideButton />
+      <View>
+        <View style={styles.guideButton}>
+          <GuideButton />
+        </View>
+        <Image source={appIcon} style={styles.icon} />
+        <TextInput
+          ref={inputRef}
+          placeholder="輸入團隊編號"
+          value={codeInput}
+          onChangeText={setCodeInput}
+        />
+        <Button
+          style={styles.buttonWrapper}
+          buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
+          title="加入團隊"
+          color="secondary"
+          onPress={handleSubmit}
+          loading={isFetching}
+        />
+        <View style={styles.historyWrapper}>
+          {roomHistory.map((history, index) => (
+            <RoomHistoryItem
+              key={history.code}
+              index={index}
+              roomHistoryItem={history}
+              handleNavigateToRoom={handleNavigateToRoom}
+            />
+          ))}
+        </View>
+        <Button
+          style={styles.buttonWrapper}
+          buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
+          title="建立團隊"
+          color="secondary"
+          onPress={handleNavigateToCreate}
+        />
+        <Button
+          style={styles.buttonWrapper}
+          buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
+          title="我的團隊"
+          color="secondary"
+          onPress={handleNavigateToMyRooms}
+        />
+        <VersionText containerStyle={styles.versionContainer} />
       </View>
-      <Image source={appIcon} style={styles.icon} />
-      <TextInput
-        ref={inputRef}
-        placeholder="輸入團隊編號"
-        value={codeInput}
-        onChangeText={setCodeInput}
-      />
-      <Button
-        style={styles.buttonWrapper}
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonTitle}
-        title="加入團隊"
-        color="secondary"
-        onPress={handleSubmit}
-        loading={isFetching}
-      />
-      <View style={styles.historyWrapper}>
-        {roomHistory.map((history, index) => (
-          <RoomHistoryItem
-            key={history.code}
-            index={index}
-            roomHistoryItem={history}
-            handleNavigateToRoom={handleNavigateToRoom}
-          />
-        ))}
-      </View>
-      <Button
-        style={styles.buttonWrapper}
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonTitle}
-        title="建立團隊"
-        color="secondary"
-        onPress={handleNavigateToCreate}
-      />
-      <VersionText containerStyle={styles.versionContainer} />
     </SafeAreaView>
   );
 };
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingHorizontal: 60,
-    paddingTop: 100,
+    justifyContent: "center",
   },
   icon: {
     height: 100,
@@ -139,13 +149,13 @@ const styles = StyleSheet.create({
   },
   historyWrapper: {
     marginHorizontal: 16,
-    marginTop: 16,
     marginBottom: 16,
     backgroundColor: theme.lightColors?.secondary,
     borderRadius: 8,
   },
   buttonWrapper: {
     marginHorizontal: 8,
+    marginBottom: 16,
   },
   button: {
     paddingHorizontal: 40,
@@ -155,7 +165,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   versionContainer: {
-    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
   },

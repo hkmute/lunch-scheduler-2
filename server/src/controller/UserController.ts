@@ -17,6 +17,15 @@ class UserController {
     return res.json();
   };
 
+  getMyCode: RequestHandler = async (req, res, next) => {
+    const userId = req.user;
+    if (userId) {
+      const codes = await this.userService.getUserCode(userId);
+      return res.json(codes);
+    }
+    return res.json();
+  };
+
   deleteMe: RequestHandler = async (req, res, next) => {
     const userId = req.user;
     const { isDev } = req.query;
