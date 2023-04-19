@@ -33,8 +33,8 @@ class CodeController {
     const userId = req.user!;
     const { name, options, allowGuestEdit, voteHour, lotteryHour } = req.body;
     validateReq("name", name, "string");
-    validateReq("voteHour", options, "number");
-    validateReq("lotteryHour", options, "number");
+    validateReq("voteHour", voteHour, "number");
+    validateReq("lotteryHour", lotteryHour, "number");
     validateReq("options", options, "array");
     const { optionsWithId, optionsToInsert } = preprocessOptions(options);
     const createdOptionsIds = await this.optionService.createOptions(
@@ -59,17 +59,24 @@ class CodeController {
     const { name, options, allowGuestEdit, voteHour, lotteryHour } = req.body;
     validateReq("code", code, "string");
     validateReq("name", name, "string");
-    validateReq("voteHour", options, "number");
-    validateReq("lotteryHour", options, "number");
+    validateReq("voteHour", voteHour, "number");
+    validateReq("lotteryHour", lotteryHour, "number");
     validateReq("options", options, "array");
-    if (allowGuestEdit !== undefined) {
-      await this.codeService.updateCode(userId, code, {
-        allowGuestEdit,
-        voteHour,
-        lotteryHour,
-      });
-    }
+
     const codeInfo = await this.codeService.getCode(code);
+    console.log('codeInfo', codeInfo)
+    if (allowGuestEdit !== undefined) {
+      await this.codeService.updateCode(
+        userId,
+        code,
+        {
+          allowGuestEdit,
+          voteHour,
+          lotteryHour,
+        },
+        codeInfo
+      );
+    }
     const { optionsWithId, optionsToInsert } = preprocessOptions(options);
     const createdOptionsIds = await this.optionService.createOptions(
       optionsToInsert

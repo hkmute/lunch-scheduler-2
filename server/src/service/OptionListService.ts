@@ -95,7 +95,6 @@ class OptionListService {
     //   },
     //   updatedOptionList
     // );
-
     const optionListToUpdate = await this.optionListRepo.findOneBy({
       id,
       code: code ? { code } : undefined,

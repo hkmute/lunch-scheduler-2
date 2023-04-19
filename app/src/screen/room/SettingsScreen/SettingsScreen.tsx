@@ -54,6 +54,8 @@ const SettingsScreen: React.FC<Props> = () => {
               optionList={data.optionList}
               isOwner={data.isOwner}
               allowGuestEdit={data.allowGuestEdit}
+              voteHour={data.voteHour}
+              lotteryHour={data.lotteryHour}
             />
           ) : (
             <GuestOptionList code={data.code} optionList={data.optionList} />

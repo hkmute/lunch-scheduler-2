@@ -18,16 +18,25 @@ export const validateReq = (
   checker?: (data: any) => boolean
 ) => {
   if (type === "array" && !Array.isArray(data)) {
-    throw new AppError(`Invalid ${nameSpace}`, 400);
+    throw new AppError(
+      `Invalid ${nameSpace}, expect  ${type} but received ${typeof data}`,
+      400
+    );
   }
   if (type === "number" && Number.isNaN(data)) {
-    throw new AppError(`Invalid ${nameSpace}`, 400);
+    throw new AppError(
+      `Invalid ${nameSpace}, expect  ${type} but received ${typeof data}`,
+      400
+    );
   }
   if (type !== "array" && typeof data !== type) {
-    throw new AppError(`Invalid ${nameSpace}`, 400);
+    throw new AppError(
+      `Invalid ${nameSpace}, expect ${type} but received ${typeof data}`,
+      400
+    );
   }
   if (checker && !checker(data)) {
-    throw new AppError(`Invalid ${nameSpace}`, 400);
+    throw new AppError(`Invalid ${nameSpace}, received ${typeof data}`, 400);
   }
   return true;
 };

@@ -9,6 +9,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { View, StyleSheet } from "react-native";
 import TextInputControl from "../formControls/TextInputControl";
 import CheckboxControl from "../formControls/CheckboxControl";
+import PickerControl from "../formControls/PickerControl";
 
 type Props = {
   mutate:
@@ -19,9 +20,21 @@ type Props = {
     name: string;
     options: { id?: number; name: string }[];
     restrictGuestEdit?: boolean;
+    voteHour: number;
+    lotteryHour: number;
   };
-  isOwner: boolean;
+  isOwner?: boolean;
 };
+
+const VOTE_HOUR_OPTIONS = Array.from(Array(24).keys()).map((i) => ({
+  label: `${i}:00`,
+  value: i,
+}));
+
+const LOTTERY_HOUR_OPTIONS = Array.from(Array(24).keys()).map((i) => ({
+  label: `${i}:30`,
+  value: i,
+}));
 
 const RoomForm: React.FC<Props> = ({
   mutate,
@@ -34,12 +47,16 @@ const RoomForm: React.FC<Props> = ({
     control,
     handleSubmit,
     getValues,
+    trigger,
     formState: { errors, dirtyFields, ...rest },
     reset,
   } = useForm({
     defaultValues: defaultValues || {
       name: "",
       options: [{ name: "" }],
+      restrictGuestEdit: false,
+      voteHour: 8,
+      lotteryHour: 11,
     },
   });
 
@@ -68,7 +85,7 @@ const RoomForm: React.FC<Props> = ({
   };
 
   const handleSubmitPress = handleSubmit(
-    ({ name, options, restrictGuestEdit }) => {
+    ({ name, options, restrictGuestEdit, voteHour, lotteryHour }) => {
       const optionsToSubmit = options.reduce((acc, option, i) => {
         const optionName = option.name.trim();
         if (!optionName) {
@@ -84,6 +101,8 @@ const RoomForm: React.FC<Props> = ({
         name,
         options: optionsToSubmit,
         allowGuestEdit: !restrictGuestEdit,
+        voteHour,
+        lotteryHour,
       });
     }
   );
@@ -110,6 +129,44 @@ const RoomForm: React.FC<Props> = ({
           containerStyle={styles.checkbox}
         />
       )}
+
+      <View style={styles.timeRow}>
+        <View style={styles.time}>
+          <Text style={fonts.label}>投票開始時間</Text>
+          <PickerControl
+            name="voteHour"
+            control={control}
+            options={VOTE_HOUR_OPTIONS}
+            rules={{
+              validate: {
+                smallerThanLotteryHour: (value) => {
+                  trigger("lotteryHour");
+                  return true;
+                },
+              },
+            }}
+          />
+        </View>
+        <View style={styles.time}>
+          <Text style={fonts.label}>結果抽選時間</Text>
+          <PickerControl
+            name="lotteryHour"
+            control={control}
+            options={LOTTERY_HOUR_OPTIONS}
+            rules={{
+              validate: {
+                largerThanVoteHour: (value) => {
+                  if (value < getValues("voteHour")) {
+                    return "必須晚於投票開始時間";
+                  }
+                },
+              },
+            }}
+            error={errors.lotteryHour}
+          />
+        </View>
+      </View>
+
       <View>
         <Text style={fonts.label}>餐廳選項</Text>
         {fields.map((field, index) => (
@@ -159,9 +216,10 @@ const RoomForm: React.FC<Props> = ({
       </View>
       <Button
         containerStyle={styles.submitButton}
-        title="確認"
+        title="保存"
         onPress={handleSubmitPress}
         loading={isLoading}
+        disabled={Object.keys(errors).length > 0}
       />
     </View>
   );
@@ -170,6 +228,12 @@ const RoomForm: React.FC<Props> = ({
 const styles = StyleSheet.create({
   checkbox: {
     marginBottom: 16,
+  },
+  timeRow: {
+    flexDirection: "row",
+  },
+  time: {
+    flex: 1,
   },
   optionRow: {
     flexDirection: "row",

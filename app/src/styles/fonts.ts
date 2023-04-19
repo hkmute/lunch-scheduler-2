@@ -29,6 +29,10 @@ const fonts = StyleSheet.create({
     fontWeight: "600",
     color: theme.lightColors?.grey1,
   },
+  inputText: {
+    fontSize: 18,
+    color: theme.lightColors?.grey0,
+  },
 });
 
 export default fonts;

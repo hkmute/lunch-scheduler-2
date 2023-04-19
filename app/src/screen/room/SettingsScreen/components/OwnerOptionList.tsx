@@ -14,6 +14,8 @@ type Props = {
   };
   isOwner: boolean;
   allowGuestEdit?: boolean;
+  voteHour: number;
+  lotteryHour: number;
 };
 
 const OwnerOptionList: React.FC<Props> = ({
@@ -21,6 +23,8 @@ const OwnerOptionList: React.FC<Props> = ({
   optionList,
   isOwner,
   allowGuestEdit,
+  voteHour,
+  lotteryHour,
 }) => {
   const { mutate, isLoading } = useEditCode({
     onSuccess: async (data, variables) => {
@@ -35,6 +39,8 @@ const OwnerOptionList: React.FC<Props> = ({
   const defaultValues = {
     ...optionList,
     restrictGuestEdit: !allowGuestEdit,
+    voteHour,
+    lotteryHour,
   };
 
   return (

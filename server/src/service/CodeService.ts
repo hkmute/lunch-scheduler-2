@@ -131,14 +131,19 @@ class CodeService {
   updateCode = async (
     userId: number,
     code: string,
-    codeOptions: Partial<Code>
+    codeOptions: Partial<Code>,
+    oldCodeInfo: Code | null
   ) => {
     const codeEntity = newEntity(Code, { code, ...codeOptions });
     const result = await this.codeRepo.update(
-      {
-        owner: { id: userId },
-        code,
-      },
+      oldCodeInfo?.allowGuestEdit
+        ? {
+            code,
+          }
+        : {
+            owner: { id: userId },
+            code,
+          },
       codeEntity
     );
     return result.affected;
