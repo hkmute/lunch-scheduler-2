@@ -8,6 +8,7 @@ import Code from "../db/entity/Code";
 import { newEntity } from "../util/helpers";
 import TodayOption from "../db/entity/TodayOption";
 import { getHours, startOfDay } from "date-fns";
+import History from "../db/entity/History";
 
 class CodeService {
   private codeRepo: Repository<Code>;
@@ -72,7 +73,24 @@ class CodeService {
       )
       .where("today_option.id IS NULL")
       .andWhere({
-        voteHour: LessThanOrEqual(getHours(new Date())),
+        voteHour: LessThanOrEqual(getHours(new Date()) + 8),
+      })
+      .getMany();
+    return result;
+  };
+
+  getAllCodeForLottery = async () => {
+    const result = await this.codeRepo
+      .createQueryBuilder("code")
+      .leftJoinAndSelect(
+        History,
+        "history",
+        "code.id = history.code_id AND history.date = :today",
+        { today: startOfDay(new Date()) }
+      )
+      .where("history.id IS NULL")
+      .andWhere({
+        lotteryHour: LessThanOrEqual(getHours(new Date()) + 8),
       })
       .getMany();
     return result;

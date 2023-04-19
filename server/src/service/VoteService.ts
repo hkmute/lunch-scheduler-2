@@ -80,6 +80,7 @@ class VoteService {
     schedule.scheduleJob(`${scheduleMinute} * * * *`, async () => {
       const allCodeToDo =
         await this.codeService.getAllCodeToCreateVoteCandidates();
+      console.log("allCodeToDo", allCodeToDo);
       allCodeToDo.forEach(({ code }) => {
         this.createVoteCandidates(code);
       });
@@ -116,7 +117,9 @@ class VoteService {
     for (const [optionId, prob] of Object.entries(votesByOptions)) {
       lotteryNumber = lotteryNumber - prob / totalVote;
       if (lotteryNumber <= 0) {
-        console.log(`Create code ${code} history with optionId ${optionId}`);
+        console.log(
+          `[${new Date().toISOString()}] Create code ${code} history with optionId ${optionId}`
+        );
         this.historyService.createCodeHistory(code, parseInt(optionId));
         return;
       }
@@ -126,11 +129,8 @@ class VoteService {
   scheduleLottery = async () => {
     const scheduleMinute = 30;
     schedule.scheduleJob(`${scheduleMinute} * * * *`, async () => {
-      const allCodeForLottery = await this.codeService.getAllCode({
-        where: {
-          lotteryHour: LessThanOrEqual(getHours(new Date())),
-        },
-      });
+      const allCodeForLottery = await this.codeService.getAllCodeForLottery();
+      console.log("allCodeForLottery", allCodeForLottery);
       // TODO: create lottery result in an array and only insert to db once
       allCodeForLottery.forEach(({ code }) => {
         this.startLottery(code);
