@@ -13,7 +13,7 @@ const MyRoomList: React.FC = () => {
 
   return (
     <FlatList
-      data={[]}
+      data={data}
       renderItem={renderItem}
       contentContainerStyle={styles.contentContainerStyle}
       ItemSeparatorComponent={ItemSeparator}

@@ -1,5 +1,5 @@
-import { Pressable, Text, StyleSheet } from "react-native";
-import { PickerIOS, PickerProps } from "@react-native-picker/picker";
+import { Pressable, Text, StyleSheet, Platform, View } from "react-native";
+import { Picker, PickerProps } from "@react-native-picker/picker";
 import {
   Control,
   Controller,
@@ -32,6 +32,42 @@ const PickerControl: React.FC<Props> = ({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  if (Platform.OS === "ios") {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field: { value, onChange, ref, ...restField } }) => (
+          <>
+            <Pressable style={styles.button} onPress={handleOpen}>
+              <Text style={fonts.inputText}>
+                {options.find((option) => option.value === value)?.label}
+              </Text>
+            </Pressable>
+            <Text style={styles.error}>{error?.message}</Text>
+            <BottomSheet visible={open} handleClose={handleClose}>
+              <Picker
+                {...rest}
+                {...restField}
+                selectedValue={value}
+                onValueChange={onChange}
+              >
+                {options.map((option) => (
+                  <Picker.Item
+                    key={option.value}
+                    label={option.label ?? option.value}
+                    value={option.value}
+                  />
+                ))}
+              </Picker>
+            </BottomSheet>
+          </>
+        )}
+      />
+    );
+  }
+
   return (
     <Controller
       name={name}
@@ -39,28 +75,23 @@ const PickerControl: React.FC<Props> = ({
       rules={rules}
       render={({ field: { value, onChange, ref, ...restField } }) => (
         <>
-          <Pressable style={styles.button} onPress={handleOpen}>
-            <Text style={fonts.inputText}>
-              {options.find((option) => option.value === value)?.label}
-            </Text>
-          </Pressable>
-          <Text style={styles.error}>{error?.message}</Text>
-          <BottomSheet visible={open} handleClose={handleClose}>
-            <PickerIOS
+          <View style={styles.androidButton}>
+            <Picker
               {...rest}
               {...restField}
               selectedValue={value}
               onValueChange={onChange}
             >
               {options.map((option) => (
-                <PickerIOS.Item
+                <Picker.Item
                   key={option.value}
                   label={option.label ?? option.value}
                   value={option.value}
                 />
               ))}
-            </PickerIOS>
-          </BottomSheet>
+            </Picker>
+          </View>
+          <Text style={styles.error}>{error?.message}</Text>
         </>
       )}
     />
@@ -75,11 +106,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     borderRadius: 8,
   },
+  androidButton: {
+    backgroundColor: appColor.grey4,
+    borderRadius: 8,
+    marginHorizontal: 8,
+  },
   error: {
     ...fonts.small,
     color: appColor.error,
     marginLeft: 8,
-    height: 16,
+    minHeight: 16,
   },
 });
 

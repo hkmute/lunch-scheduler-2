@@ -1,6 +1,7 @@
 module.exports = () => {
   const isExpoGo = process.env.APP_ENV === undefined;
   const isDev = process.env.APP_ENV !== "production";
+
   return {
     expo: {
       name: isDev ? "EAT MUD DEV" : "食乜",

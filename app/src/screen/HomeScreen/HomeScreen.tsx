@@ -95,7 +95,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           onChangeText={setCodeInput}
         />
         <Button
-          style={styles.buttonWrapper}
+          containerStyle={styles.buttonWrapper}
           buttonStyle={styles.button}
           titleStyle={styles.buttonTitle}
           title="加入團隊"
@@ -103,18 +103,20 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleSubmit}
           loading={isFetching}
         />
-        <View style={styles.historyWrapper}>
-          {roomHistory.map((history, index) => (
-            <RoomHistoryItem
-              key={history.code}
-              index={index}
-              roomHistoryItem={history}
-              handleNavigateToRoom={handleNavigateToRoom}
-            />
-          ))}
-        </View>
+        {!!roomHistory.length && (
+          <View style={styles.historyWrapper}>
+            {roomHistory.map((history, index) => (
+              <RoomHistoryItem
+                key={history.code}
+                index={index}
+                roomHistoryItem={history}
+                handleNavigateToRoom={handleNavigateToRoom}
+              />
+            ))}
+          </View>
+        )}
         <Button
-          style={styles.buttonWrapper}
+          containerStyle={styles.buttonWrapper}
           buttonStyle={styles.button}
           titleStyle={styles.buttonTitle}
           title="建立團隊"
@@ -122,7 +124,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleNavigateToCreate}
         />
         <Button
-          style={styles.buttonWrapper}
+          containerStyle={styles.buttonWrapper}
           buttonStyle={styles.button}
           titleStyle={styles.buttonTitle}
           title="我的團隊"
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingHorizontal: 40,
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   buttonTitle: {
     fontWeight: "600",
