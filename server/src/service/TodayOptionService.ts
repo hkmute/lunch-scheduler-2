@@ -1,8 +1,8 @@
-import { startOfDay } from "date-fns";
+import { addHours, startOfDay } from "date-fns";
 import { Repository, DataSource } from "typeorm";
 import Option from "../db/entity/Option";
 import TodayOption from "../db/entity/TodayOption";
-import { newEntity } from "../util/helpers";
+import { getStartOfHKTDay, newEntity } from "../util/helpers";
 import CodeService from "./CodeService";
 
 class TodayOptionService {
@@ -21,7 +21,7 @@ class TodayOptionService {
         code: {
           code,
         },
-        date: startOfDay(new Date()),
+        date: getStartOfHKTDay(),
       },
     });
     return options;
@@ -31,7 +31,7 @@ class TodayOptionService {
     const codeEntity = await this.codeService.getCode(code);
     const newTodayOptions = options.map((option) =>
       newEntity(TodayOption, {
-        date: startOfDay(new Date()),
+        date: getStartOfHKTDay(),
         code: codeEntity,
         option,
       })

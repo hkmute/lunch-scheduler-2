@@ -1,3 +1,4 @@
+import { addHours, startOfDay } from "date-fns";
 import AppError from "./error/AppError";
 
 export const newEntity = <T>(
@@ -68,4 +69,11 @@ export const getPaginationParams = (query: Record<string, any>) => {
 export const sanitizeOwner = (data: Record<string, any>, userId: number) => {
   const { owner, ...rest } = data;
   return { ...rest, isOwner: owner?.id === userId };
+};
+
+export const getStartOfHKTDay = () => {
+  const now = new Date();
+  const timeZoneOffset = now.getTimezoneOffset() / 60;
+  const hktOffset = 8;
+  return startOfDay(addHours(new Date(), hktOffset + timeZoneOffset));
 };

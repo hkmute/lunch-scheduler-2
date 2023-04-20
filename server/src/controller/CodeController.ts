@@ -64,7 +64,7 @@ class CodeController {
     validateReq("options", options, "array");
 
     const codeInfo = await this.codeService.getCode(code);
-    console.log('codeInfo', codeInfo)
+
     if (allowGuestEdit !== undefined) {
       await this.codeService.updateCode(
         userId,

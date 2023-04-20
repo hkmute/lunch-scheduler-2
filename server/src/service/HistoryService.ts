@@ -1,7 +1,7 @@
-import { addHours, startOfDay } from "date-fns";
+import { startOfDay } from "date-fns";
 import { DataSource, Repository } from "typeorm";
 import History from "../db/entity/History";
-import { newEntity } from "../util/helpers";
+import { getStartOfHKTDay, newEntity } from "../util/helpers";
 import CodeService from "./CodeService";
 
 class HistoryService {
@@ -17,7 +17,7 @@ class HistoryService {
     const todayResult = await this.historyRepo.findOne({
       where: {
         code: { code },
-        date: startOfDay(addHours(new Date(), 8 + timeZoneOffset)),
+        date: getStartOfHKTDay(),
       },
       relations: {
         option: true,

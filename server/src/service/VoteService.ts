@@ -1,11 +1,10 @@
 import schedule from "node-schedule";
-import { DataSource, LessThanOrEqual, Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import Vote from "../db/entity/Vote";
 import CodeService from "./CodeService";
 import HistoryService from "./HistoryService";
 import TodayOptionService from "./TodayOptionService";
-import { getHours, startOfDay } from "date-fns";
-import { newEntity } from "../util/helpers";
+import { getStartOfHKTDay, newEntity } from "../util/helpers";
 
 class VoteService {
   private voteRepo: Repository<Vote>;
@@ -34,7 +33,7 @@ class VoteService {
         code: {
           code,
         },
-        date: startOfDay(new Date()),
+        date: getStartOfHKTDay(),
       },
     });
     return votes;
@@ -43,7 +42,7 @@ class VoteService {
   vote = async (code: string, todayOptionId: number, voter: string) => {
     const codeEntity = await this.codeService.getCode(code);
     const newVote = newEntity(Vote, {
-      date: startOfDay(new Date()),
+      date: getStartOfHKTDay(),
       voter,
       code: codeEntity,
       todayOption: todayOptionId,

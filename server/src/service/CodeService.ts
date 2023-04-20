@@ -5,9 +5,9 @@ import {
   Repository,
 } from "typeorm";
 import Code from "../db/entity/Code";
-import { newEntity } from "../util/helpers";
+import { getStartOfHKTDay, newEntity } from "../util/helpers";
 import TodayOption from "../db/entity/TodayOption";
-import { getHours, startOfDay } from "date-fns";
+import { getHours } from "date-fns";
 import History from "../db/entity/History";
 
 class CodeService {
@@ -69,7 +69,7 @@ class CodeService {
         TodayOption,
         "today_option",
         "code.id = today_option.code_id AND today_option.date = :today",
-        { today: startOfDay(new Date()) }
+        { today: getStartOfHKTDay() }
       )
       .where("today_option.id IS NULL")
       .andWhere({
@@ -86,7 +86,7 @@ class CodeService {
         History,
         "history",
         "code.id = history.code_id AND history.date = :today",
-        { today: startOfDay(new Date()) }
+        { today: getStartOfHKTDay() }
       )
       .where("history.id IS NULL")
       .andWhere({
