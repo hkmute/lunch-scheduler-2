@@ -7,7 +7,7 @@ import {
 import Code from "../db/entity/Code";
 import { getStartOfHKTDay, newEntity } from "../util/helpers";
 import TodayOption from "../db/entity/TodayOption";
-import { getHours } from "date-fns";
+import { getHours, startOfDay } from "date-fns";
 import History from "../db/entity/History";
 
 class CodeService {
@@ -69,7 +69,7 @@ class CodeService {
         TodayOption,
         "today_option",
         "code.id = today_option.code_id AND today_option.date = :today",
-        { today: getStartOfHKTDay() }
+        { today: startOfDay(new Date()) }
       )
       .where("today_option.id IS NULL")
       .andWhere({
@@ -86,7 +86,7 @@ class CodeService {
         History,
         "history",
         "code.id = history.code_id AND history.date = :today",
-        { today: getStartOfHKTDay() }
+        { today: startOfDay(new Date()) }
       )
       .where("history.id IS NULL")
       .andWhere({
