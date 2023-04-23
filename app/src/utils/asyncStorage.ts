@@ -9,6 +9,14 @@ export const asyncGetCode = async () => {
   return await AsyncStorage.getItem("code");
 };
 
+export const asyncSetPushToken = async (pushToken: string) => {
+  return await AsyncStorage.setItem("push_token", pushToken);
+};
+
+export const asyncGetPushToken = async () => {
+  return await AsyncStorage.getItem("push_token");
+};
+
 export const asyncSetDeviceId = async (deviceId: string) => {
   return await SecureStore.setItemAsync("deviceId", deviceId);
 };

@@ -5,6 +5,7 @@ import {
   optionListController,
   codeController,
   userController,
+  notificationController,
 } from "../controller";
 import guard from "../middleware/guard";
 import errorCatcher from "../util/error/errorCatcher";
@@ -21,6 +22,16 @@ router.get("/code/:code", errorCatcher(codeController.getCodeDetails));
 router.post("/code", errorCatcher(codeController.createCode));
 router.put("/code/:code", errorCatcher(codeController.editCode));
 router.get("/code/:code/exist", errorCatcher(codeController.checkCodeExist));
+
+router.post(
+  "/notification/token",
+  errorCatcher(notificationController.updatePushToken)
+);
+
+router.put(
+  "/notification/token/code",
+  errorCatcher(notificationController.updatePushTokenCode)
+);
 
 router.get("/options", errorCatcher(mainController.getOptions));
 

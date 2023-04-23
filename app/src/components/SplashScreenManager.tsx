@@ -3,13 +3,22 @@ import * as SplashScreen from "expo-splash-screen";
 import { Animated, StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import splashImage from "assets/splash.png";
+import useNotification from "@/hooks/useNotification";
 
 SplashScreen.preventAutoHideAsync();
 
 const SplashScreenManager: React.FC = () => {
   const [isAppReady, setAppReady] = useState(false);
+  const [isImageLoad, setImageLoaded] = useState(false);
   const [isAnimationCompleted, setAnimationCompleted] = useState(false);
   const animation = useMemo(() => new Animated.Value(1), []);
+  const { isReady: isNotificationReady } = useNotification();
+
+  useEffect(() => {
+    if (isImageLoad && isNotificationReady) {
+      setAppReady(true);
+    }
+  }, [isImageLoad, isNotificationReady]);
 
   useEffect(() => {
     if (isAppReady) {
@@ -24,7 +33,7 @@ const SplashScreenManager: React.FC = () => {
   const onImageLoaded = () => {
     setTimeout(() => {
       SplashScreen.hideAsync().then(() => {
-        setAppReady(true);
+        setImageLoaded(true);
       });
     }, 300);
   };

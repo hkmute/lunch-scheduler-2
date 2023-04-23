@@ -5,6 +5,8 @@ import CodeService from "./CodeService";
 import HistoryService from "./HistoryService";
 import TodayOptionService from "./TodayOptionService";
 import { getStartOfHKTDay, newEntity } from "../util/helpers";
+import NotificationService from "./NotificationService";
+import { ExpoPushMessage } from "expo-server-sdk";
 
 class VoteService {
   private voteRepo: Repository<Vote>;
@@ -12,7 +14,8 @@ class VoteService {
     dataSource: DataSource,
     private codeService: CodeService,
     private todayOptionService: TodayOptionService,
-    private historyService: HistoryService
+    private historyService: HistoryService,
+    private notificationService: NotificationService
   ) {
     this.voteRepo = dataSource.getRepository(Vote);
   }
@@ -71,7 +74,7 @@ class VoteService {
       result.push(selected);
     }
     await this.todayOptionService.createTodayOptions(code, result);
-    return true;
+    return { code, result };
   };
 
   scheduleCreateVoteCandidates = async () => {
@@ -80,9 +83,41 @@ class VoteService {
       const allCodeToDo =
         await this.codeService.getAllCodeToCreateVoteCandidates();
       console.log("allCodeToDo", allCodeToDo);
-      allCodeToDo.forEach(({ code }) => {
-        this.createVoteCandidates(code);
+      const promises = allCodeToDo.map(({ code }) => {
+        return this.createVoteCandidates(code);
       });
+      const result = await Promise.allSettled(promises);
+      const pushMessages = result.reduce((acc, promiseResult) => {
+        if (promiseResult.status === "rejected" || !promiseResult.value) {
+          return acc;
+        }
+        const { code, result } = promiseResult.value;
+        const message: Omit<ExpoPushMessage, "to"> = {
+          title: "New vote candidates",
+          body: `New vote candidates for code ${code}: ${result
+            .map((option) => option.name)
+            .join(", ")}`,
+        };
+        return {
+          codes: [...acc.codes, code],
+          messages: { ...acc.messages, [code]: message },
+        };
+      }, {} as { codes: string[]; messages: Record<string, Omit<ExpoPushMessage, "to">> });
+      const pushTokens = await this.notificationService.getPushTokensByCodes(
+        pushMessages.codes
+      );
+      const notificationsToSend: ExpoPushMessage[] = pushTokens.map(
+        (tokens) => {
+          return {
+            to: tokens.tokens,
+            ...pushMessages.messages[tokens.code],
+          };
+        }
+      );
+      await this.notificationService.sendNotifications(notificationsToSend);
+      console.log(
+        `${new Date()} Created vote candidates and sent notifications`
+      );
     });
     console.log(
       `Scheduled to create vote candidates every hour at ${scheduleMinute} mins`
@@ -119,8 +154,13 @@ class VoteService {
         console.log(
           `[${new Date().toISOString()}] Create code ${code} history with optionId ${optionId}`
         );
-        this.historyService.createCodeHistory(code, parseInt(optionId));
-        return;
+        const result = await this.historyService.createCodeHistory(
+          code,
+          parseInt(optionId)
+        );
+        if (result) {
+          return { code, result };
+        }
       }
     }
   };
@@ -131,9 +171,39 @@ class VoteService {
       const allCodeForLottery = await this.codeService.getAllCodeForLottery();
       console.log("allCodeForLottery", allCodeForLottery);
       // TODO: create lottery result in an array and only insert to db once
-      allCodeForLottery.forEach(({ code }) => {
-        this.startLottery(code);
+      const promises = allCodeForLottery.map(({ code }) => {
+        return this.startLottery(code);
       });
+      const result = await Promise.allSettled(promises);
+      const pushMessages = result.reduce((acc, promiseResult) => {
+        if (promiseResult.status === "rejected" || !promiseResult.value) {
+          return acc;
+        }
+        const { code, result } = promiseResult.value;
+        const message: Omit<ExpoPushMessage, "to"> = {
+          title: "Lottery result",
+          body: `Lottery result for code ${code}: ${result.option.name}`,
+        };
+        return {
+          codes: [...acc.codes, code],
+          messages: { ...acc.messages, [code]: message },
+        };
+      }, {} as { codes: string[]; messages: Record<string, Omit<ExpoPushMessage, "to">> });
+      const pushTokens = await this.notificationService.getPushTokensByCodes(
+        pushMessages.codes
+      );
+      const notificationsToSend: ExpoPushMessage[] = pushTokens.map(
+        (tokens) => {
+          return {
+            to: tokens.tokens,
+            ...pushMessages.messages[tokens.code],
+          };
+        }
+      );
+      await this.notificationService.sendNotifications(notificationsToSend);
+      console.log(
+        `${new Date()} Created lottery result and sent notifications`
+      );
     });
     console.log(
       `Scheduled to create lottery result every hour at ${scheduleMinute} mins`

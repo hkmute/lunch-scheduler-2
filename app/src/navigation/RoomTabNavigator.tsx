@@ -9,6 +9,9 @@ import { RoomTabParamList, RootStackParamList } from "./types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import GuideButton from "@/components/GuideButton";
+import { useEffect } from "react";
+import updatePushTokenCode from "@/api/notification/updatePushTokenCode";
+import { asyncGetPushToken } from "@/utils/asyncStorage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Room">;
 
@@ -16,8 +19,23 @@ const Tab = createBottomTabNavigator<RoomTabParamList>();
 
 const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
   const { theme } = useTheme();
-  const { updateCode } = useCodeContext();
+  const { code, updateCode } = useCodeContext();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    asyncGetPushToken().then((token) => {
+      // if (token) {
+        updatePushTokenCode('test-token', code);
+      // }
+    });
+    return () => {
+      asyncGetPushToken().then((token) => {
+        if (token) {
+          updatePushTokenCode(token, undefined);
+        }
+      });
+    }
+  }, []);
 
   const handleBack = async () => {
     await updateCode("");

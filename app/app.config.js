@@ -58,6 +58,7 @@ module.exports = () => {
         package: isDev
           ? "com.hkmute.lunchscheduler_dev"
           : "com.hkmute.lunchscheduler",
+        googleServicesFile: "./google-services.json",
       },
       web: {
         favicon: "./assets/favicon.png",
