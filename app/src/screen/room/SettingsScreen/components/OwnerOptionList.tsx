@@ -4,6 +4,7 @@ import { showToast } from "@/utils/toast";
 import updateRoomHistory from "@/utils/updateRoomHistory";
 import { View } from "react-native";
 import CodeRow from "./CodeRow";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   code: string;
@@ -26,9 +27,11 @@ const OwnerOptionList: React.FC<Props> = ({
   voteHour,
   lotteryHour,
 }) => {
+  const queryClient = useQueryClient();
   const { mutate, isLoading } = useEditCode({
     onSuccess: async (data, variables) => {
       showToast("修改成功");
+      queryClient.refetchQueries({ queryKey: ["code-settings"] });
       await updateRoomHistory({
         code,
         optionListName: variables.name,

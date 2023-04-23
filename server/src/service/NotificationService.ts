@@ -25,8 +25,9 @@ class NotificationService {
   };
 
   getPushTokensByCodes = async (codes: string[]) => {
-    // select array_agg(push_token.expo_token), code.code from push_token
-    // left join code on code.id = push_token.code_id group by code.code;
+    if (!codes.length) {
+      return [];
+    }
     const pushTokens = await this.pushTokenRepo
       .createQueryBuilder("push_token")
       .select("array_agg(push_token.expo_token)", "tokens")
@@ -65,7 +66,7 @@ class NotificationService {
     const result = await this.pushTokenRepo
       .createQueryBuilder()
       .update("push_token")
-      .set({ code: () => "(SELECT id FROM code WHERE code.code = :code)" })
+      .set({ code: () => '(SELECT id FROM "code" WHERE code.code = :code)' })
       .setParameter("code", code)
       .where({ expoToken })
       .execute();

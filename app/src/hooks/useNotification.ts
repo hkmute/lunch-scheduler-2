@@ -52,9 +52,9 @@ const useNotification = () => {
   const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     registerForPushNotificationsAsync().then(async (token) => {
-      // if (token) {
-        await updatePushToken('test-token');
-      // }
+      if (token) {
+        await updatePushToken(token);
+      }
       setIsReady(true);
     });
   }, []);

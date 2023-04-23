@@ -6,14 +6,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Button } from "@rneui/themed";
 import { useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { RoomTabScreenProps } from "../../navigation/types";
+import { RoomTabScreenProps } from "../../../navigation/types";
+import PendingMessage from "./components/PendingMessage";
 
 type Props = RoomTabScreenProps<"Today">;
 
 const TodayScreen: React.FC<Props> = () => {
   const { code } = useCodeContext();
   const { deviceId } = useUserContext();
-  const { data, refetch } = useToday({ variables: { code } });
+  const { data, refetch, isLoading } = useToday({ variables: { code } });
   const { mutate } = useMutateVote({ onSuccess: refetch });
 
   useFocusEffect(
@@ -26,12 +27,12 @@ const TodayScreen: React.FC<Props> = () => {
     mutate({ code, todayOptionId, voter: deviceId });
   };
 
+  if (isLoading) {
+    return null;
+  }
+
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.bodyText}>投票時段將於早上8:00開始</Text>
-      </View>
-    );
+    return <PendingMessage />;
   }
 
   if (Array.isArray(data)) {

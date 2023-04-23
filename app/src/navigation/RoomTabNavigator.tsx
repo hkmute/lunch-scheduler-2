@@ -4,7 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Button, useTheme } from "@rneui/themed";
 import HistoryScreen from "../screen/room/HistoryScreen";
 import SettingsScreen from "../screen/room/SettingsScreen";
-import TodayScreen from "../screen/room/TodayScreen";
+import TodayScreen from "../screen/room/TodayScreen/TodayScreen";
 import { RoomTabParamList, RootStackParamList } from "./types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,9 +24,9 @@ const RoomTabNavigator: React.FC<Props> = ({ navigation }) => {
 
   useEffect(() => {
     asyncGetPushToken().then((token) => {
-      // if (token) {
-        updatePushTokenCode('test-token', code);
-      // }
+      if (token) {
+        updatePushTokenCode(token, code);
+      }
     });
     return () => {
       asyncGetPushToken().then((token) => {

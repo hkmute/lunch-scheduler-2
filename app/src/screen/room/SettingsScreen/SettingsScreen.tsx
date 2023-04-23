@@ -3,7 +3,7 @@ import LoginButtons from "@/components/LoginButtons";
 import { useCodeContext, useUserContext } from "@/context";
 import appColor from "@/styles/colors";
 import fonts from "@/styles/fonts";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Text,
   ScrollView,
@@ -16,6 +16,7 @@ import GuestOptionList from "./components/GuestOptionList";
 import OwnerOptionList from "./components/OwnerOptionList";
 import VersionText from "@/components/viewComponents/VersionText";
 import UserSettings from "./components/UserSettings";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = RoomTabScreenProps<"Settings">;
 
@@ -27,6 +28,12 @@ const SettingsScreen: React.FC<Props> = () => {
   useEffect(() => {
     refetch();
   }, [user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   const showEditMode = data && (data.isOwner || data.allowGuestEdit);
 

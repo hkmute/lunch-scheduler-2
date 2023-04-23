@@ -10,6 +10,8 @@ import { View, StyleSheet } from "react-native";
 import TextInputControl from "../formControls/TextInputControl";
 import CheckboxControl from "../formControls/CheckboxControl";
 import PickerControl from "../formControls/PickerControl";
+import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
 
 type Props = {
   mutate:
@@ -42,6 +44,7 @@ const RoomForm: React.FC<Props> = ({
   defaultValues,
   isOwner,
 }) => {
+  const navigation = useNavigation();
   const { code } = useCodeContext();
   const {
     control,
@@ -59,6 +62,14 @@ const RoomForm: React.FC<Props> = ({
       lotteryHour: 11,
     },
   });
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      reset(defaultValues);
+    });
+
+    return unsubscribe;
+  }, [navigation, defaultValues]);
 
   const { fields, append, remove } = useFieldArray({
     control,
