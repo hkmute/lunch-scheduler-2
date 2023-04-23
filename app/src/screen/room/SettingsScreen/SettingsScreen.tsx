@@ -55,7 +55,7 @@ const SettingsScreen: React.FC<Props> = () => {
           </View>
         )}
         {data &&
-          (showEditMode ? (
+          (!showEditMode ? (
             <OwnerOptionList
               code={data.code}
               optionList={data.optionList}
@@ -65,7 +65,12 @@ const SettingsScreen: React.FC<Props> = () => {
               lotteryHour={data.lotteryHour}
             />
           ) : (
-            <GuestOptionList code={data.code} optionList={data.optionList} />
+            <GuestOptionList
+              code={data.code}
+              optionList={data.optionList}
+              voteHour={data.voteHour}
+              lotteryHour={data.lotteryHour}
+            />
           ))}
         <VersionText />
       </ScrollView>

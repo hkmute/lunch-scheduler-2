@@ -1,9 +1,16 @@
 import appColor from "@/styles/colors";
 import fonts from "@/styles/fonts";
 import { asyncGetGuideId, asyncSetGuideId } from "@/utils/asyncStorage";
-import { Button, Icon, useTheme } from "@rneui/themed";
+import { Button, Divider, Icon, useTheme } from "@rneui/themed";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, Text, View, StyleSheet } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 const GuideButton: React.FC = () => {
   const { theme } = useTheme();
@@ -11,7 +18,7 @@ const GuideButton: React.FC = () => {
 
   useEffect(() => {
     asyncGetGuideId().then((guideId) => {
-      const GUIDE_ID = "1.0.1";
+      const GUIDE_ID = "1.1.0";
       if (guideId !== GUIDE_ID) {
         // temp add delay to prevent splash screen error
         setTimeout(() => {
@@ -44,30 +51,48 @@ const GuideButton: React.FC = () => {
       >
         <Pressable onPress={handelClose} style={styles.backdrop}>
           <Pressable style={styles.content}>
-            <Text style={styles.title}>使用說明</Text>
-            <View style={styles.block}>
-              <Text style={styles.text}>
-                建立或加入團隊後，每日會按以下流程抽出一間餐廳。團隊擁有者可在設定頁面修改餐廳選項。
-              </Text>
-            </View>
-            <View style={styles.block}>
-              <Text style={styles.text}>1. 投票時段 (8:00 - 11:00)</Text>
-              <Text style={styles.description}>
-                顯示3間餐廳，每人可投票1間餐廳，提高餐廳的出現率。
-              </Text>
-            </View>
-            <View style={styles.block}>
-              <Text style={styles.text}>2. 顯示結果 (11:00 - 8:00)</Text>
-              <Text style={styles.description}>
-                系統會根據餐廳的投票比率，抽出今日的結果。
-              </Text>
-            </View>
-            <View style={styles.future}>
-              <Text style={styles.text}>未來功能</Text>
-              <Text style={styles.description}>- 推送通知</Text>
-              <Text style={styles.description}>- 擁有團隊一覽</Text>
-              <Text style={styles.description}>- 自訂投票時段</Text>
-            </View>
+            <ScrollView
+              style={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+            >
+              <Pressable>
+                <Text style={styles.title}>2023-4-23 更新</Text>
+                <View style={styles.block}>
+                  <Text style={styles.text}>1. 推送通知</Text>
+                  <Text style={styles.text}>2. 擁有團隊一覽</Text>
+                  <Text style={styles.text}>3. 自訂投票時段</Text>
+                  <Text style={styles.text}>
+                    4. 開放任何人修改團隊設定，擁有者可以設定限制修改
+                  </Text>
+                </View>
+                <Divider style={styles.divider} />
+                <Text style={styles.title}>使用說明</Text>
+                <View style={styles.block}>
+                  <Text style={styles.text}>
+                    建立或加入團隊後，每日會抽出一間餐廳。
+                  </Text>
+                  <Text style={styles.text}>
+                    設定頁面中可以修改餐廳選項。團隊擁有者可以決定是否限制其他人修改。
+                  </Text>
+                </View>
+                <View style={styles.block}>
+                  <Text style={styles.text}>1. 投票時段</Text>
+                  <Text style={styles.description}>
+                    顯示3間餐廳，每人可以選擇提高一間餐廳的出現率。
+                  </Text>
+                </View>
+                <View style={styles.block}>
+                  <Text style={styles.text}>2. 顯示結果</Text>
+                  <Text style={styles.description}>
+                    系統會根據餐廳的投票比率，抽出今日的結果。
+                  </Text>
+                </View>
+                <View style={styles.future}>
+                  <Text style={styles.text}>未來功能</Text>
+                  <Text style={styles.description}>- 可以選擇降低餐廳機率</Text>
+                </View>
+              </Pressable>
+            </ScrollView>
             <Button title="確認" onPress={handelClose} />
           </Pressable>
         </Pressable>
@@ -90,6 +115,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 8,
     padding: 16,
+    height: "50%",
+  },
+  scrollContent: {
+    marginBottom: 16,
   },
   title: {
     ...fonts.title,
@@ -108,6 +137,9 @@ const styles = StyleSheet.create({
   },
   future: {
     marginVertical: 16,
+  },
+  divider: {
+    marginVertical: 8,
   },
 });
 
