@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 8,
     padding: 16,
-    height: "50%",
+    maxHeight: "60%",
   },
   scrollContent: {
     marginBottom: 16,
