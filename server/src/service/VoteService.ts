@@ -74,7 +74,7 @@ class VoteService {
       result.push(selected);
     }
     await this.todayOptionService.createTodayOptions(code, result);
-    return { code, result };
+    return { code, optionsListName: codeDetails.optionList.name, result };
   };
 
   scheduleCreateVoteCandidates = async () => {
@@ -87,22 +87,27 @@ class VoteService {
         return this.createVoteCandidates(code);
       });
       const result = await Promise.allSettled(promises);
-      const pushMessages = result.reduce((acc, promiseResult) => {
-        if (promiseResult.status === "rejected" || !promiseResult.value) {
-          return acc;
+      const pushMessages = result.reduce(
+        (acc, promiseResult) => {
+          if (promiseResult.status === "rejected" || !promiseResult.value) {
+            return acc;
+          }
+          const { code, optionsListName, result } = promiseResult.value;
+          console.log("scheduleCreateVoteCandidates promiseResult", result);
+          const message: Omit<ExpoPushMessage, "to"> = {
+            title: optionsListName,
+            body: "開始投票了",
+          };
+          return {
+            codes: [...acc.codes, code],
+            messages: { ...acc.messages, [code]: message },
+          };
+        },
+        { codes: [], messages: {} } as {
+          codes: string[];
+          messages: Record<string, Omit<ExpoPushMessage, "to">>;
         }
-        const { code, result } = promiseResult.value;
-        const message: Omit<ExpoPushMessage, "to"> = {
-          title: "New vote candidates",
-          body: `New vote candidates for code ${code}: ${result
-            .map((option) => option.name)
-            .join(", ")}`,
-        };
-        return {
-          codes: [...acc.codes, code],
-          messages: { ...acc.messages, [code]: message },
-        };
-      }, {} as { codes: string[]; messages: Record<string, Omit<ExpoPushMessage, "to">> });
+      );
       const pushTokens = await this.notificationService.getPushTokensByCodes(
         pushMessages.codes
       );
@@ -154,11 +159,14 @@ class VoteService {
         console.log(
           `[${new Date().toISOString()}] Create code ${code} history with optionId ${optionId}`
         );
-        const result = await this.historyService.createCodeHistory(
+        const newHistory = await this.historyService.createCodeHistory(
           code,
           parseInt(optionId)
         );
-        if (result) {
+        if (newHistory) {
+          const result = todayOptions.find(
+            (option) => option.option?.id === parseInt(optionId)
+          );
           return { code, result };
         }
       }
@@ -175,20 +183,31 @@ class VoteService {
         return this.startLottery(code);
       });
       const result = await Promise.allSettled(promises);
-      const pushMessages = result.reduce((acc, promiseResult) => {
-        if (promiseResult.status === "rejected" || !promiseResult.value) {
-          return acc;
+      const pushMessages = result.reduce(
+        (acc, promiseResult) => {
+          if (
+            promiseResult.status === "rejected" ||
+            !promiseResult.value ||
+            !promiseResult.value.result
+          ) {
+            return acc;
+          }
+          const { code, result } = promiseResult.value;
+          console.log("scheduleLottery promiseResult", result);
+          const message: Omit<ExpoPushMessage, "to"> = {
+            title: "今日食",
+            body: result.option.name,
+          };
+          return {
+            codes: [...acc.codes, code],
+            messages: { ...acc.messages, [code]: message },
+          };
+        },
+        { codes: [], messages: {} } as {
+          codes: string[];
+          messages: Record<string, Omit<ExpoPushMessage, "to">>;
         }
-        const { code, result } = promiseResult.value;
-        const message: Omit<ExpoPushMessage, "to"> = {
-          title: "Lottery result",
-          body: `Lottery result for code ${code}: ${result.option.name}`,
-        };
-        return {
-          codes: [...acc.codes, code],
-          messages: { ...acc.messages, [code]: message },
-        };
-      }, {} as { codes: string[]; messages: Record<string, Omit<ExpoPushMessage, "to">> });
+      );
       const pushTokens = await this.notificationService.getPushTokensByCodes(
         pushMessages.codes
       );

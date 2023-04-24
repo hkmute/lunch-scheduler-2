@@ -90,10 +90,17 @@ class NotificationService {
       // documentation:
       // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
 
-      if (ticketChunk[0].status === "error") {
-      } else {
-        // TODO: save receipt id for later use ticketChunk[0].id;
-      }
+      ticketChunk.forEach((ticket) => {
+        if (
+          ticket.status === "error" &&
+          ticket.details?.error === "DeviceNotRegistered" &&
+          ticket.details?.expoPushToken
+        ) {
+          this.removePushToken(ticket.details?.expoPushToken);
+        } else {
+          // TODO: save receipt id for later use ticketChunk[0].id;
+        }
+      });
     }
   };
 
