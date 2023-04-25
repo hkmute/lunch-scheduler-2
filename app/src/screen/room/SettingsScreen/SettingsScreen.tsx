@@ -55,7 +55,7 @@ const SettingsScreen: React.FC<Props> = () => {
           </View>
         )}
         {data &&
-          (!showEditMode ? (
+          (showEditMode ? (
             <OwnerOptionList
               code={data.code}
               optionList={data.optionList}

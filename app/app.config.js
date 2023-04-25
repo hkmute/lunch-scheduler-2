@@ -38,8 +38,8 @@ module.exports = () => {
           {
             file: "sentry-expo/upload-sourcemaps",
             config: {
-              organization: process.env.SENTRY_ORG,
-              project: process.env.SENTRY_PROJECT,
+              organization: isDev ? undefined : process.env.SENTRY_ORG,
+              project: isDev ? undefined : process.env.SENTRY_PROJECT,
             },
           },
         ],
