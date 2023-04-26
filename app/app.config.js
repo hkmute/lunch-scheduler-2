@@ -23,6 +23,13 @@ module.exports = () => {
       assetBundlePatterns: ["**/*"],
       plugins: [
         "expo-apple-authentication",
+        [
+          "expo-notifications",
+          {
+            icon: "./assets/android-push-notification.png",
+            color: "#455a64",
+          },
+        ],
         "sentry-expo",
         [
           "expo-build-properties",
