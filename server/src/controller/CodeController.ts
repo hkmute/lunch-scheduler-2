@@ -33,8 +33,8 @@ class CodeController {
     const userId = req.user!;
     const { name, options, allowGuestEdit, voteHour, lotteryHour } = req.body;
     validateReq("name", name, "string");
-    validateReq("voteHour", voteHour, "number");
-    validateReq("lotteryHour", lotteryHour, "number");
+    // validateReq("voteHour", voteHour, "number");
+    // validateReq("lotteryHour", lotteryHour, "number");
     validateReq("options", options, "array");
     const { optionsWithId, optionsToInsert } = preprocessOptions(options);
     const createdOptionsIds = await this.optionService.createOptions(
@@ -59,8 +59,8 @@ class CodeController {
     const { name, options, allowGuestEdit, voteHour, lotteryHour } = req.body;
     validateReq("code", code, "string");
     validateReq("name", name, "string");
-    validateReq("voteHour", voteHour, "number");
-    validateReq("lotteryHour", lotteryHour, "number");
+    // validateReq("voteHour", voteHour, "number");
+    // validateReq("lotteryHour", lotteryHour, "number");
     validateReq("options", options, "array");
 
     const codeInfo = await this.codeService.getCode(code);
