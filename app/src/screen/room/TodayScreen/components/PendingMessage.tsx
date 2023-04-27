@@ -1,19 +1,18 @@
-import useCodeSettings from "@/api/room/useCodeSettings";
-import { useCodeContext } from "@/context";
 import fonts from "@/styles/fonts";
 import { StyleSheet, View, Text } from "react-native";
 
-const PendingMessage: React.FC = () => {
-  const { code } = useCodeContext();
-  const { data, isLoading } = useCodeSettings({ variables: { code } });
+type Props = {
+  voteHour?: number;
+};
 
-  if (isLoading) {
+const PendingMessage: React.FC<Props> = ({ voteHour }) => {
+  if (!voteHour) {
     return null;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.bodyText}>投票時段將於{data?.voteHour}:00開始</Text>
+      <Text style={styles.bodyText}>投票時段將於{voteHour}:00開始</Text>
     </View>
   );
 };

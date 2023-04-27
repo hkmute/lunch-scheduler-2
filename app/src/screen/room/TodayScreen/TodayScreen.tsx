@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RoomTabScreenProps } from "../../../navigation/types";
 import PendingMessage from "./components/PendingMessage";
+import useCodeSettings from "@/api/room/useCodeSettings";
 
 type Props = RoomTabScreenProps<"Today">;
 
@@ -16,6 +17,8 @@ const TodayScreen: React.FC<Props> = () => {
   const { deviceId } = useUserContext();
   const { data, refetch, isLoading } = useToday({ variables: { code } });
   const { mutate } = useMutateVote({ onSuccess: refetch });
+  const { data: codeSettings, isLoading: isCodeSettingsLoading } =
+    useCodeSettings({ variables: { code } });
 
   useFocusEffect(
     useCallback(() => {
@@ -27,19 +30,21 @@ const TodayScreen: React.FC<Props> = () => {
     mutate({ code, todayOptionId, voter: deviceId });
   };
 
-  if (isLoading) {
+  if (isLoading || isCodeSettingsLoading) {
     return null;
   }
 
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    return <PendingMessage />;
+    return <PendingMessage voteHour={codeSettings?.voteHour} />;
   }
 
   if (Array.isArray(data)) {
     return (
       <View style={styles.container}>
         <Text style={styles.bodyText}>投票時段</Text>
-        <Text style={styles.bodyText}>(8:00 - 11:00)</Text>
+        <Text style={styles.bodyText}>
+          ({codeSettings?.voteHour}:00 - {codeSettings?.lotteryHour}:00)
+        </Text>
         {data.map((item) => (
           <View key={item.id} style={styles.buttonWrapper}>
             <Button
