@@ -24,7 +24,7 @@ class MainController {
     if (todayResult) {
       return res.json(todayResult);
     }
-    
+
     const todayOptions = await this.todayOptionService.getTodayOptions(code);
     return res.json(todayOptions);
   };
@@ -39,11 +39,18 @@ class MainController {
   };
 
   vote: RequestHandler = async (req, res) => {
-    const { code, todayOptionId, voter } = req.body;
+    const { code, todayOptionId, voter, type } = req.body;
     validateReq("code", code, "string");
     validateReq("todayOptionId", todayOptionId, "number");
     validateReq("voter", voter, "string");
-    this.voteService.vote(code, todayOptionId, voter);
+    await this.voteService.vote(code, todayOptionId, voter, type);
+    return res.json();
+  };
+
+  unvote: RequestHandler = async (req, res) => {
+    const { id } = req.params;
+    validateReq("id", id, "number");
+    await this.voteService.deleteVote(id);
     return res.json();
   };
 }

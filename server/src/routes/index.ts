@@ -38,6 +38,7 @@ router.get("/options", errorCatcher(mainController.getOptions));
 router.get("/today/:code", errorCatcher(mainController.getToday));
 
 router.post("/vote", errorCatcher(mainController.vote));
+router.delete("/vote/:id", errorCatcher(mainController.unvote));
 
 router.get("/history/:code", errorCatcher(mainController.getHistoryByCode));
 

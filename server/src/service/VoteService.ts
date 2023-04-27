@@ -1,6 +1,6 @@
 import schedule from "node-schedule";
 import { DataSource, Repository } from "typeorm";
-import Vote from "../db/entity/Vote";
+import Vote, { VoteType } from "../db/entity/Vote";
 import CodeService from "./CodeService";
 import HistoryService from "./HistoryService";
 import TodayOptionService from "./TodayOptionService";
@@ -42,22 +42,34 @@ class VoteService {
     return votes;
   };
 
-  vote = async (code: string, todayOptionId: number, voter: string) => {
+  vote = async (
+    code: string,
+    todayOptionId: number,
+    voter: string,
+    type?: VoteType
+  ) => {
     const codeEntity = await this.codeService.getCode(code);
     const newVote = newEntity(Vote, {
       date: getStartOfHKTDay(),
       voter,
       code: codeEntity,
       todayOption: todayOptionId,
+      type,
     });
     await this.voteRepo.upsert(newVote, {
       conflictPaths: {
         date: true,
         voter: true,
         code: true,
+        type: true,
       },
       skipUpdateIfNoValuesChanged: true,
     });
+    return true;
+  };
+
+  deleteVote = async (id: string) => {
+    await this.voteRepo.delete(id);
     return true;
   };
 
@@ -141,8 +153,13 @@ class VoteService {
     const votesByOptions = todayVotes.reduce(
       (acc, cur) => {
         if (acc[cur.todayOption?.option.id]) {
-          acc[cur.todayOption.option.id] += 1;
-          totalVote += 1;
+          if (cur.type === VoteType.UP) {
+            acc[cur.todayOption.option.id] += 1;
+            totalVote += 1;
+          } else {
+            acc[cur.todayOption.option.id] -= 1;
+            totalVote -= 1;
+          }
         }
         return acc;
       },
@@ -151,6 +168,20 @@ class VoteService {
         return acc;
       }, {} as Record<string, number>)
     );
+
+    Object.entries(votesByOptions).forEach(([optionId, voteNum]) => {
+      if (voteNum <= 0) {
+        votesByOptions[optionId] = 0;
+        totalVote -= voteNum;
+      }
+    });
+
+    if (totalVote <= 0) {
+      Object.entries(votesByOptions).forEach(([optionId, voteNum]) => {
+        votesByOptions[optionId] = 1;
+      });
+      totalVote = todayOptions.length;
+    }
 
     let lotteryNumber = Math.random();
     for (const [optionId, prob] of Object.entries(votesByOptions)) {
