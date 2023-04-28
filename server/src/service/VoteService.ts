@@ -54,7 +54,7 @@ class VoteService {
       voter,
       code: codeEntity,
       todayOption: todayOptionId,
-      type,
+      type: type || VoteType.UP,
     });
     await this.voteRepo.upsert(newVote, {
       conflictPaths: {

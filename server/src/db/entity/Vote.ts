@@ -9,7 +9,7 @@ export enum VoteType {
 }
 
 @Entity()
-@Unique("day_vote", ["date", "voter", "code"])
+@Unique("day_vote", ["date", "voter", "code", "type"])
 class Vote extends DefaultColumns {
   @Column()
   date: Date;
