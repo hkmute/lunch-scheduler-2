@@ -15,7 +15,9 @@ type Props = RoomTabScreenProps<"Today">;
 const TodayScreen: React.FC<Props> = () => {
   const { code } = useCodeContext();
   const { deviceId } = useUserContext();
-  const { data, refetch, isLoading } = useToday({ variables: { code } });
+  const { data, refetch, isLoading, isError } = useToday({
+    variables: { code },
+  });
   const { mutate } = useMutateVote({ onSuccess: refetch });
   const { data: codeSettings, isLoading: isCodeSettingsLoading } =
     useCodeSettings({ variables: { code } });
@@ -30,7 +32,7 @@ const TodayScreen: React.FC<Props> = () => {
     mutate({ code, todayOptionId, voter: deviceId });
   };
 
-  if (isLoading || isCodeSettingsLoading) {
+  if (isLoading || isCodeSettingsLoading || isError) {
     return null;
   }
 
