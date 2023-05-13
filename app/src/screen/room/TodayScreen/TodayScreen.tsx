@@ -4,15 +4,17 @@ import { useCodeContext, useUserContext } from "@/context";
 import fonts from "@/styles/fonts";
 import { useFocusEffect } from "@react-navigation/native";
 import { Button } from "@rneui/themed";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RoomTabScreenProps } from "../../../navigation/types";
 import PendingMessage from "./components/PendingMessage";
 import useCodeSettings from "@/api/room/useCodeSettings";
+import useAppState from "@/hooks/useAppState";
 
 type Props = RoomTabScreenProps<"Today">;
 
 const TodayScreen: React.FC<Props> = () => {
+  const appState = useAppState();
   const { code } = useCodeContext();
   const { deviceId } = useUserContext();
   const { data, refetch, isLoading, isError } = useToday({
@@ -24,8 +26,10 @@ const TodayScreen: React.FC<Props> = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [])
+      if (appState === "active") {
+        refetch();
+      }
+    }, [appState])
   );
 
   const handlePress = (todayOptionId: number) => () => {

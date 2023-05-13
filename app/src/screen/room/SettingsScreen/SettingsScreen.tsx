@@ -17,11 +17,13 @@ import OwnerOptionList from "./components/OwnerOptionList";
 import VersionText from "@/components/viewComponents/VersionText";
 import UserSettings from "./components/UserSettings";
 import { useFocusEffect } from "@react-navigation/native";
+import useAppState from "@/hooks/useAppState";
 
 type Props = RoomTabScreenProps<"Settings">;
 
 const SettingsScreen: React.FC<Props> = () => {
   const { code } = useCodeContext();
+  const appState = useAppState();
   const user = useUserContext();
   const { data, refetch } = useCodeSettings({ variables: { code } });
 
@@ -31,8 +33,10 @@ const SettingsScreen: React.FC<Props> = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [])
+      if (appState === "active") {
+        refetch();
+      }
+    }, [appState])
   );
 
   const showEditMode = data && (data.isOwner || data.allowGuestEdit);
