@@ -22,6 +22,7 @@ module.exports = () => {
       },
       assetBundlePatterns: ["**/*"],
       plugins: [
+        "expo-secure-store",
         "expo-apple-authentication",
         [
           "expo-notifications",
