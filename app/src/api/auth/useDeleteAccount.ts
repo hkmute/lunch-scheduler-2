@@ -5,8 +5,9 @@ import apiClient from "../apiClient";
 
 const useDeleteAccount = () => {
   const { updateUser } = useUserContext();
-  
-  return createMutation(() => apiClient.delete("/me"), {
+
+  return createMutation({
+    mutationFn: () => apiClient.delete("/me"),
     onSuccess: async () => {
       await handleLogout(updateUser);
     },

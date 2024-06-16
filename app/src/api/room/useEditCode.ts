@@ -10,15 +10,22 @@ export type EditCodeData = {
   lotteryHour: number;
 };
 
-const useEditCode = createMutation<undefined, EditCodeData>(
-  async ({ code, name, options, allowGuestEdit, voteHour, lotteryHour }) =>
+const useEditCode = createMutation<undefined, EditCodeData>({
+  mutationFn: async ({
+    code,
+    name,
+    options,
+    allowGuestEdit,
+    voteHour,
+    lotteryHour,
+  }) =>
     apiClient.put(`/code/${code}`, {
       name,
       options,
       allowGuestEdit,
       voteHour,
       lotteryHour,
-    })
-);
+    }),
+});
 
 export default useEditCode;

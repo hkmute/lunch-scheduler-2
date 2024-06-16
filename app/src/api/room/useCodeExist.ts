@@ -12,9 +12,11 @@ type CodeExistVar = {
 };
 
 const useCodeExist = createQuery<CodeExistRes, CodeExistVar, AppErrorResponse>(
-  "code-exist",
-  ({ queryKey: [primaryKey, variables] }) => {
-    return apiClient.get(`/code/${variables.code}/exist`);
+  {
+    primaryKey: "code-exist",
+    queryFn: ({ queryKey: [primaryKey, variables] }) => {
+      return apiClient.get(`/code/${variables.code}/exist`);
+    },
   }
 );
 

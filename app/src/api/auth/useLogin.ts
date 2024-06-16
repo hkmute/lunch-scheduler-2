@@ -19,8 +19,8 @@ interface LoginResponse {
 }
 
 const useLogin = (updateUser: (user: User) => void) =>
-  createMutation<LoginResponse, LoginData, AppErrorResponse<string>>(
-    ({ type, id_token, displayName, authorizationCode, isDev }) =>
+  createMutation<LoginResponse, LoginData, AppErrorResponse<string>>({
+    mutationFn: ({ type, id_token, displayName, authorizationCode, isDev }) =>
       apiClient.post("/login", {
         type,
         id_token,
@@ -28,13 +28,11 @@ const useLogin = (updateUser: (user: User) => void) =>
         authorizationCode,
         isDev,
       }),
-    {
-      async onSuccess(data, variables, context) {
-        if (data?.token) {
-          await handleLoginSuccess(data, updateUser);
-        }
-      },
-    }
-  )();
+    async onSuccess(data, variables, context) {
+      if (data?.token) {
+        await handleLoginSuccess(data, updateUser);
+      }
+    },
+  })();
 
 export default useLogin;

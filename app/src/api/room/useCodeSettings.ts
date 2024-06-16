@@ -25,11 +25,11 @@ const useCodeSettings = createQuery<
   CodeSettingsVar,
   AppErrorResponse
 >(
-  "code-settings",
-  ({ queryKey: [primaryKey, variables] }) => {
-    return apiClient.get(`/code/${variables.code}`);
-  },
   {
+    primaryKey: "code-settings",
+    queryFn: ({ queryKey: [primaryKey, variables] }) => {
+      return apiClient.get(`/code/${variables.code}`);
+    },
     enabled: (data, variables) => !!variables.code,
   }
 );

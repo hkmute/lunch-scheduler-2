@@ -9,15 +9,21 @@ export type CreateCodeData = {
   lotteryHour: number;
 };
 
-const useCreateCode = createMutation<{ code: string }, CreateCodeData>(
-  async ({ name, options, allowGuestEdit, voteHour, lotteryHour }) =>
+const useCreateCode = createMutation<{ code: string }, CreateCodeData>({
+  mutationFn: async ({
+    name,
+    options,
+    allowGuestEdit,
+    voteHour,
+    lotteryHour,
+  }) =>
     apiClient.post("/code", {
       name,
       options,
       allowGuestEdit,
       voteHour,
       lotteryHour,
-    })
-);
+    }),
+});
 
 export default useCreateCode;

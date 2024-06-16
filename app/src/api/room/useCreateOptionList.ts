@@ -6,12 +6,12 @@ type CreateOptionListData = {
   options: { id?: number; name: string }[];
 };
 
-const useCreateOptionList = createMutation(
-  async ({ name, options }: CreateOptionListData) =>
+const useCreateOptionList = createMutation({
+  mutationFn: async ({ name, options }: CreateOptionListData) =>
     apiClient.post("/option-list", {
       name,
       options,
-    })
-);
+    }),
+});
 
 export default useCreateOptionList;

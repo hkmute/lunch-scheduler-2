@@ -14,11 +14,11 @@ export type MyCode = {
   };
 };
 
-const useMyCodes = createQuery<MyCode[], void, AppErrorResponse>(
-  "my-code-list",
-  ({ queryKey: [primaryKey] }) => {
+const useMyCodes = createQuery<MyCode[], void, AppErrorResponse>({
+  primaryKey: "my-code-list",
+  queryFn: ({ queryKey: [primaryKey] }) => {
     return apiClient.get(`/me/code`);
-  }
-);
+  },
+});
 
 export default useMyCodes;

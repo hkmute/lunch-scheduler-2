@@ -19,14 +19,12 @@ type TodayVar = {
   code: string;
 };
 
-const useToday = createQuery<TodayRes, TodayVar, AppErrorResponse>(
-  "today",
-  ({ queryKey: [primaryKey, variables] }) => {
+const useToday = createQuery<TodayRes, TodayVar, AppErrorResponse>({
+  primaryKey: "today",
+  queryFn: ({ queryKey: [primaryKey, variables] }) => {
     return apiClient.get(`/today/${variables.code}`);
   },
-  {
-    enabled: (data, variables) => !!variables.code,
-  }
-);
+  enabled: (data, variables) => !!variables.code,
+});
 
 export default useToday;

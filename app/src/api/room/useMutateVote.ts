@@ -7,13 +7,13 @@ export type MutateVoteData = {
   voter: string;
 };
 
-const useMutateVote = createMutation<undefined, MutateVoteData>(
-  async ({ code, todayOptionId, voter }) =>
+const useMutateVote = createMutation<undefined, MutateVoteData>({
+  mutationFn: async ({ code, todayOptionId, voter }) =>
     apiClient.post(`/vote`, {
       code,
       todayOptionId,
       voter,
-    })
-);
+    }),
+});
 
 export default useMutateVote;
