@@ -31,7 +31,13 @@ module.exports = () => {
             color: "#455a64",
           },
         ],
-        "sentry-expo",
+        [
+          "@sentry/react-native/expo",
+          {
+            organization: isDev ? undefined : process.env.SENTRY_ORG,
+            project: isDev ? undefined : process.env.SENTRY_PROJECT,
+          },
+        ],
         [
           "expo-build-properties",
           {
@@ -41,17 +47,7 @@ module.exports = () => {
           },
         ],
       ],
-      hooks: {
-        postPublish: [
-          {
-            file: "sentry-expo/upload-sourcemaps",
-            config: {
-              organization: isDev ? undefined : process.env.SENTRY_ORG,
-              project: isDev ? undefined : process.env.SENTRY_PROJECT,
-            },
-          },
-        ],
-      },
+      hooks: {},
       ios: {
         supportsTablet: true,
         bundleIdentifier: isDev

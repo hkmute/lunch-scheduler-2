@@ -13,10 +13,11 @@ import QueryClientProvider from "./api/QueryClientProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { sentryInit } from "./utils/sentry";
 import SplashScreenManager from "./components/SplashScreenManager";
+import * as Sentry from "@sentry/react-native";
 
 sentryInit();
 
-export default function App() {
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
@@ -42,6 +43,8 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+export default Sentry.wrap(App);
 
 const styles = StyleSheet.create({
   container: {
