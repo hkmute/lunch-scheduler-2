@@ -11,11 +11,6 @@ module.exports = () => {
       orientation: "portrait",
       icon: "./assets/icon.png",
       userInterfaceStyle: "light",
-      splash: {
-        image: "./assets/splash.png",
-        resizeMode: "cover",
-        backgroundColor: "#455a64",
-      },
       updates: {
         fallbackToCacheTimeout: 0,
         url: "https://u.expo.dev/0b15b5df-0820-47a2-a2a4-d09ec5af0fc0",
@@ -24,6 +19,14 @@ module.exports = () => {
       plugins: [
         "expo-secure-store",
         "expo-apple-authentication",
+        [
+          "expo-splash-screen",
+          {
+            image: "./assets/adaptive-icon.png",
+            backgroundColor: "#455a64",
+            imageWidth: 200,
+          },
+        ],
         [
           "expo-notifications",
           {
